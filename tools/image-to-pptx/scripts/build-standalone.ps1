@@ -56,7 +56,17 @@ if (Test-Path $Destination) {
   if (-not $looksLikeOurs -and -not $Force) {
     throw "目标目录已存在且不像本包：$Destination。确认无误后加 -Force 覆盖。"
   }
-  Remove-Item $Destination -Recurse -Force
+  # Rename before deleting. If anything under the destination is in use — a running
+  # instance keeps sharp's native DLL locked — the rename fails and NOTHING has been
+  # destroyed yet. Deleting first would leave a half-wiped package behind.
+  $trashName = (Split-Path $Destination -Leaf) + '.old-' + (Get-Date -Format 'HHmmss')
+  $trashPath = Join-Path (Split-Path $Destination -Parent) $trashName
+  try {
+    Rename-Item -LiteralPath $Destination -NewName $trashName -ErrorAction Stop
+  } catch {
+    throw "目标目录正在被占用，可能有一个 image-to-fig-pptx 实例还在运行：" + $Destination + "。请先关闭它（或结束对应的 node 进程）再重新打包。原因：" + $_.Exception.Message
+  }
+  Remove-Item -LiteralPath $trashPath -Recurse -Force -ErrorAction SilentlyContinue
 }
 New-Item -ItemType Directory -Force -Path $Destination, (Join-Path $Destination 'bin') | Out-Null
 
