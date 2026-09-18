@@ -99,6 +99,28 @@ function enableUtf8Console() {
   }
 }
 
+/**
+ * Bumping the URL on every launch matters: browsers usually just re-focus an
+ * already-open tab for the same URL instead of re-fetching it, which makes a
+ * freshly rebuilt UI look unchanged. A changing query forces a real load.
+ */
+function resolveBuildStamp() {
+  try {
+    return String(Math.floor(fs.statSync(UI_HTML).mtimeMs));
+  } catch {
+    return String(Date.now());
+  }
+}
+
+async function isAlreadyRunning(url) {
+  try {
+    const response = await fetch(`${url}/api/v1/health`, { signal: AbortSignal.timeout(1500) });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 function openBrowser(url) {
   const command = process.platform === "win32"
     ? { executable: "cmd.exe", args: ["/c", "start", "", url] }
@@ -110,7 +132,7 @@ function openBrowser(url) {
   child.unref();
 }
 
-function start() {
+async function start() {
   const options = parseArguments(process.argv.slice(2));
   enableUtf8Console();
   if (options.help) { printHelp(); return; }
@@ -125,6 +147,16 @@ function start() {
   }
 
   const url = `http://${formatHost(options.host)}:${options.port}`;
+
+  // Starting a second copy would only die with EADDRINUSE after the browser had
+  // already opened the old instance, so detect that case and reuse it.
+  if (await isAlreadyRunning(url)) {
+    process.stdout.write(`已有 image-to-fig-pptx 在运行：${url}\n`);
+    process.stdout.write("已直接为你打开。要重启请先关掉原来那个命令行窗口。\n");
+    if (!options.noOpen) openBrowser(`${url}/?v=${resolveBuildStamp()}`);
+    return;
+  }
+
   process.stdout.write(`image-to-fig-pptx 启动中… ${url}\n`);
   process.stdout.write(`数据目录：${options.dataDir}\n`);
 
@@ -137,12 +169,15 @@ function start() {
   const engine = require(ENGINE_ENTRY);
   engine.startServer();
   if (!options.noOpen) {
-    engine.ready.then(() => openBrowser(url));
+    engine.ready.then(() => openBrowser(`${url}/?v=${resolveBuildStamp()}`));
   }
 }
 
 if (require.main === module) {
-  start();
+  start().catch((error) => {
+    process.stderr.write(`启动失败：${error.stack || error.message}\n`);
+    process.exitCode = 1;
+  });
 }
 
 module.exports = {
@@ -155,7 +190,9 @@ module.exports = {
   UI_HTML,
   enableUtf8Console,
   formatHost,
+  isAlreadyRunning,
   missingParts,
+  resolveBuildStamp,
   parseArguments,
   printHelp
 };
