@@ -211,6 +211,14 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
+    // Route on the path only. Every route below compares request.url against an
+    // exact path or a path regex, so a query string — which browsers freely add for
+    // cache busting — would otherwise turn into a 404.
+    const queryIndex = request.url.indexOf("?");
+    if (queryIndex !== -1) {
+      request.url = request.url.slice(0, queryIndex);
+    }
+
     if (request.method === "GET" && (request.url === "/" || request.url === "/index.html")) {
       sendUiHtml(response);
       return;

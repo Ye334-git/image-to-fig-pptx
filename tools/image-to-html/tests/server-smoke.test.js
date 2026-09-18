@@ -22,6 +22,16 @@ test("one process serves the UI and versioned API while legacy API paths stay cl
   assert.equal(ui.status, 200);
   assert.match(await ui.text(), /image-to-fig-pptx/);
 
+  // Routing must ignore the query string: the launcher appends a cache-busting one,
+  // and browsers add their own. Both the UI and the API have to keep working.
+  const uiWithQuery = await fetch(`${baseUrl}/?v=1726`);
+  assert.equal(uiWithQuery.status, 200);
+  assert.match(await uiWithQuery.text(), /image-to-fig-pptx/);
+  assert.equal((await fetch(`${baseUrl}/index.html?v=1`)).status, 200);
+  const healthWithQuery = await fetch(`${baseUrl}/api/v1/health?x=1`);
+  assert.equal(healthWithQuery.status, 200);
+  assert.equal((await healthWithQuery.json()).ok, true);
+
   const health = await fetch(`${baseUrl}/api/v1/health`);
   const healthPayload = await health.json();
   assert.equal(healthPayload.ok, true);
