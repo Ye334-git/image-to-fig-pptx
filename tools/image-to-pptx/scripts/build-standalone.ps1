@@ -85,6 +85,7 @@ if ($LASTEXITCODE -ge 8) { throw "robocopy converter 失败，退出码 $LASTEXI
 Write-Host '复制启动器、示例与说明…'
 Copy-Item (Join-Path $shellSrc 'bin') $Destination -Recurse -Force
 Copy-Item (Join-Path $shellSrc 'examples') $Destination -Recurse -Force
+Copy-Item (Join-Path $shellSrc 'docs') $Destination -Recurse -Force
 foreach ($file in @('start.cmd', 'package.json', 'README.md', 'verify.cjs')) {
   Copy-Item (Join-Path $shellSrc $file) $Destination -Force
 }

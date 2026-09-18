@@ -31,3 +31,7 @@ tools/image-to-html/test-results/
 
 # 大体积可再生交付物（保留在磁盘，不入库）
 deliverables/
+
+# README 对比图的全分辨率原图：README 用的是 docs/images 里压缩过的版本，
+# 原图保留在磁盘上以便日后重新导出，但不入库（约 7 MB 二进制）。
+docs/dev/comparison-originals/
