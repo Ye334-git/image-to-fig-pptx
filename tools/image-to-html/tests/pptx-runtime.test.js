@@ -1,5 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fsp = require("node:fs/promises");
+const os = require("node:os");
 const path = require("node:path");
 
 const {
@@ -30,6 +32,28 @@ test("resolveSiblingToolDir points at the sibling tool next to image-to-html", (
 
 test("the html-to-pptx CLI really exists next to this tool", () => {
   assert.equal(isPptxToolInstalled(), true);
+});
+
+test("the converter is found in both the dev and the packaged layout", async (t) => {
+  const root = await fsp.mkdtemp(path.join(os.tmpdir(), "i2p-layout-"));
+  t.after(() => fsp.rm(root, { recursive: true, force: true }));
+  const services = path.join(root, "engine", "src", "server", "services");
+  await fsp.mkdir(services, { recursive: true });
+
+  // Packaged layout: <root>/converter sits next to <root>/engine
+  await fsp.mkdir(path.join(root, "converter", "bin"), { recursive: true });
+  assert.equal(resolvePptxToolDir(services), path.join(root, "converter"));
+  assert.equal(resolvePptxCliEntry(services), path.join(root, "converter", "bin", "html-to-pptx.mjs"));
+
+  // Dev layout: the sibling tool keeps its own name
+  await fsp.rm(path.join(root, "converter"), { recursive: true, force: true });
+  await fsp.mkdir(path.join(root, "html-to-pptx", "bin"), { recursive: true });
+  assert.equal(resolvePptxToolDir(services), path.join(root, "html-to-pptx"));
+
+  // An explicit override always wins, so a launcher can pin the location.
+  process.env.IMAGE_TO_FIG_PPTX_CONVERTER_DIR = path.join(root, "pinned");
+  t.after(() => { delete process.env.IMAGE_TO_FIG_PPTX_CONVERTER_DIR; });
+  assert.equal(resolvePptxToolDir(services), path.join(root, "pinned"));
 });
 
 test("powerpoint resolution is non-throwing and returns null off Windows", () => {

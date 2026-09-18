@@ -1,0 +1,17 @@
+{
+  "name": "image-to-fig-pptx",
+  "version": "0.1.0",
+  "private": true,
+  "description": "图片 → 切图 → 人工调整 → HTML/.fig → 可编辑 PPTX（自包含发行版，依赖已内置）",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "image-to-fig-pptx": "bin/image-to-fig-pptx.cjs"
+  },
+  "scripts": {
+    "start": "node bin/image-to-fig-pptx.cjs"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

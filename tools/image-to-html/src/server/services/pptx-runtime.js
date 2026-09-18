@@ -14,6 +14,11 @@ const path = require("node:path");
  */
 
 const POWERPOINT_PATH_ENV = "IMAGE_TO_PPTX_POWERPOINT_PATH";
+const CONVERTER_DIR_ENV = "IMAGE_TO_FIG_PPTX_CONVERTER_DIR";
+// Two supported layouts:
+//   dev       tools/<engine>/src/server/services  ->  tools/html-to-pptx
+//   packaged  <root>/engine/src/server/services   ->  <root>/converter
+const CONVERTER_DIR_NAMES = ["converter", "html-to-pptx"];
 const OFFICE_SUBDIRS = ["root/Office16", "root/Office15", "Office16", "Office15", "Office14"];
 
 function defaultIsFile(target) {
@@ -43,7 +48,19 @@ function resolveSiblingToolDir(toolName, baseDir = __dirname) {
 }
 
 function resolvePptxToolDir(baseDir = __dirname) {
-  return resolveSiblingToolDir("html-to-pptx", baseDir);
+  const override = process.env[CONVERTER_DIR_ENV];
+  if (override) return path.resolve(override);
+  // Both layouts put the package root four levels above this module.
+  const root = path.resolve(baseDir, "..", "..", "..", "..");
+  for (const name of CONVERTER_DIR_NAMES) {
+    const candidate = path.join(root, name);
+    try {
+      if (fs.statSync(candidate).isDirectory()) return candidate;
+    } catch {
+      // keep looking
+    }
+  }
+  return path.join(root, CONVERTER_DIR_NAMES[0]);
 }
 
 function resolvePptxCliEntry(baseDir = __dirname) {
@@ -121,6 +138,8 @@ function describePptxUnavailable(capabilities = {}) {
 }
 
 module.exports = {
+  CONVERTER_DIR_ENV,
+  CONVERTER_DIR_NAMES,
   POWERPOINT_PATH_ENV,
   describePptxUnavailable,
   isPowerPointAvailable,

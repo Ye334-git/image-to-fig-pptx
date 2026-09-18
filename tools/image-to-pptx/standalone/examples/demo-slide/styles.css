@@ -1,0 +1,21 @@
+:root{--board-width:1748;--board-height:900;}
+html,body{margin:0;background:#eef0f4;}
+.screen{
+  position:relative;
+  width:1748px;height:900px;
+  box-sizing:border-box;
+  padding:80px 96px;
+  background:#ffffff;
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+  color:#111318;
+}
+h1{font-size:76px;margin:0 0 24px;letter-spacing:2px;}
+.sub{font-size:28px;color:#4a4f5a;margin:0 0 72px;}
+.row{display:flex;gap:32px;}
+.card{
+  flex:1;padding:36px 32px;border:2px solid #111318;border-radius:18px;
+  background:#f7f8fa;display:flex;flex-direction:column;gap:14px;
+}
+.card strong{font-size:38px;}
+.card span{font-size:24px;color:#4a4f5a;}
+.bar{position:absolute;left:96px;bottom:96px;width:520px;height:14px;background:#111318;border-radius:7px;}
