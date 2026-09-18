@@ -1140,6 +1140,11 @@
           scheduleWorkspaceDraftSave();
         });
       });
+      // The sidebar highlights a preset while the actual pixel size lives in the
+      // (hidden) custom-size inputs. Write the active preset into them on load so the
+      // two can never disagree — they did: the highlight said 16:9 while the inputs
+      // still held the old portrait default and images came back vertical.
+      applyRatio(currentRatio);
 
       const closeCustomSizeDialog = () => customSizeDialog.classList.remove("open");
       customSizeClose.addEventListener("click", closeCustomSizeDialog);
@@ -1149,8 +1154,8 @@
       });
       customSizeForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        const width = Math.round(clampNumber(Number(widthInput.value), 256, 4096, 750));
-        const height = Math.round(clampNumber(Number(heightInput.value), 256, 4096, 1334));
+        const width = Math.round(clampNumber(Number(widthInput.value), 256, 4096, 1920));
+        const height = Math.round(clampNumber(Number(heightInput.value), 256, 4096, 1080));
         widthInput.value = width;
         heightInput.value = height;
         currentRatio = "custom";
@@ -1193,8 +1198,8 @@
             mode: currentMode,
             style: currentStyle,
             count: currentCount,
-            width: clampNumber(Number(widthInput.value), 256, 4096, 390),
-            height: clampNumber(Number(heightInput.value), 256, 4096, 844),
+            width: clampNumber(Number(widthInput.value), 256, 4096, 1920),
+            height: clampNumber(Number(heightInput.value), 256, 4096, 1080),
             progressId
           };
           currentManifest = await createBackendManifest(options);

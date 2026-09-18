@@ -108,6 +108,33 @@ test("the workflow guidance replaces the inherited design-tool shell", () => {
   assert.ok(template.indexOf('id="htmlPreviewPptx"') < menuStart, "转 PPTX must stay a first-class action");
 });
 
+test("the highlighted ratio preset and the real pixel size stay in sync", () => {
+  const template = readSource("ui.template.html");
+  const app = readSource("app.js");
+
+  // The sidebar highlights a preset, but generation reads the hidden custom-size
+  // inputs. If those keep an old default the UI lies about the output shape — which is
+  // exactly how 16:9 produced portrait images.
+  const width = template.match(/id="width"[^>]*value="(\d+)"/);
+  const height = template.match(/id="height"[^>]*value="(\d+)"/);
+  assert.ok(width && height, "the size inputs must declare defaults");
+  assert.ok(Number(width[1]) / Number(height[1]) > 1.2, `default ${width[1]}x${height[1]} must be landscape`);
+
+  const preset = app.match(/"16:9":\s*\[(\d+),\s*(\d+)\]/);
+  assert.ok(preset, "the 16:9 preset must exist");
+  assert.equal(width[1], preset[1], "template width must match the 16:9 preset");
+  assert.equal(height[1], preset[2], "template height must match the 16:9 preset");
+
+  // Portrait leftovers in the fallbacks would reintroduce the same bug silently.
+  assert.doesNotMatch(app, /256, 4096, 750\)/);
+  assert.doesNotMatch(app, /256, 4096, 1334\)/);
+  assert.doesNotMatch(app, /256, 4096, 390\)/);
+  assert.doesNotMatch(app, /256, 4096, 844\)/);
+
+  // And the preset has to be applied on load, not only when a preset is clicked.
+  assert.match(app, /\n      applyRatio\(currentRatio\);/);
+});
+
 test("multi-page decks are queued client side and merged server side", () => {
   const app = readSource("app.js");
   const template = readSource("ui.template.html");
