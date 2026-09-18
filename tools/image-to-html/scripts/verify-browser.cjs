@@ -33,17 +33,41 @@ async function main() {
       const startupMessage = await page.locator("#startupMessage").innerText().catch(() => "");
       throw new Error(`启动页未关闭：${startupMessage}${errors.length ? `；${errors.join(" | ")}` : ""}`);
     }
-    if (await page.title() !== "Image To HTML") throw new Error("页面标题不正确");
+    if (await page.title() !== "image-to-fig-pptx") throw new Error("页面标题不正确");
     // Slice .fig export is part of this tool (requirements.md D1) and must be reachable.
     const placeSource = page.locator("#placeSource");
     if (!await placeSource.isVisible()) throw new Error("切图 .fig 入口不可见");
-    if ((await placeSource.innerText()).trim() !== "下载切图 .fig") {
+    if ((await placeSource.innerText()).trim() !== "导出切图 .fig") {
       throw new Error(`切图入口文案不正确：${(await placeSource.innerText()).trim()}`);
     }
     for (const selector of ["#exportSlices", "#exportFigmaFrameHtml"]) {
       if (await page.locator(selector).isVisible()) throw new Error(`已排除入口仍然可见：${selector}`);
     }
-    if (!await page.locator("#placeAiLayers").isVisible()) throw new Error("AI 图层重建入口不可见");
+    const placeAiLayers = page.locator("#placeAiLayers");
+    if (!await placeAiLayers.isVisible()) throw new Error("生成 HTML 预览入口不可见");
+    if ((await placeAiLayers.innerText()).trim() !== "生成 HTML 预览") {
+      throw new Error(`预览入口文案不正确：${(await placeAiLayers.innerText()).trim()}`);
+    }
+    // Workflow guidance: five steps, exactly one active.
+    const steps = page.locator("#workflowSteps .workflow-step");
+    if (await steps.count() !== 5) throw new Error("工作流步骤条不是 5 步");
+    if (await page.locator("#workflowSteps .workflow-step.active").count() !== 1) {
+      throw new Error("工作流步骤条应恰好有 1 个当前步骤");
+    }
+    // Slicing history is reachable. It stays hidden until there is history to show,
+    // so only the element's presence is asserted here; the template-level removal of
+    // the hard-coded hidden attribute is covered by the wiring test.
+    if (await page.locator("#draftsTrigger").count() !== 1) throw new Error("切图记录入口不存在");
+    const ratios = await page.locator("[data-ratio]").evaluateAll((nodes) => nodes.map((n) => n.dataset.ratio));
+    if (JSON.stringify(ratios) !== JSON.stringify(["16:9", "4:3", "3:4", "custom"])) {
+      throw new Error("选片比例应为 16:9 / 4:3 / 3:4 / custom，实际：" + JSON.stringify(ratios));
+    }
+    if (!await page.locator('[data-ratio="16:9"]').evaluate((n) => n.classList.contains("active"))) {
+      throw new Error("默认比例应为 16:9");
+    }
+    // Secondary exports collapsed into one menu.
+    if (await page.locator("#htmlPreviewMoreMenu").isVisible()) throw new Error("其他导出菜单初始应为收起");
+    if (await page.locator("#htmlPreviewPptx").count() !== 1) throw new Error("缺少「转 PPTX」按钮");
     // PPTX export controls ship in the shell; they stay disabled until a preview
     // exists and the local runtime reports itself ready.
     if (await page.locator("#htmlPreviewPptx").count() !== 1) throw new Error("缺少「转 PPTX」按钮");

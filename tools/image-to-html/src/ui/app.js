@@ -66,6 +66,10 @@
       const htmlPreviewPptx = document.getElementById("htmlPreviewPptx");
       const pptxAspectSelect = document.getElementById("pptxAspect");
       const htmlPreviewPptxResult = document.getElementById("htmlPreviewPptxResult");
+      const workflowSteps = document.getElementById("workflowSteps");
+      const htmlPreviewMoreGroup = document.getElementById("htmlPreviewMoreGroup");
+      const htmlPreviewMore = document.getElementById("htmlPreviewMore");
+      const htmlPreviewMoreMenu = document.getElementById("htmlPreviewMoreMenu");
       const pptxAddToDeck = document.getElementById("pptxAddToDeck");
       const pptxDeckStrip = document.getElementById("pptxDeckStrip");
       const pptxDeckInfo = document.getElementById("pptxDeckInfo");
@@ -254,6 +258,8 @@
       // Finished pages waiting to be merged into one deck, in queue order. Each
       // page comes from its own workspace, so the package is captured on add.
       let pptxDeckQueue = [];
+      // Set once a deck has been produced, so the step bar can mark ⑤ as reached.
+      let pptxExportCompleted = false;
       let modelConfigApiKeyChanged = false;
       let revealedModelConfigKey = false;
       let editingModelConfigPurpose = "vision";
@@ -266,7 +272,7 @@
       let currentManifest = null;
       let currentMode = "text-to-image";
       let currentStyle = "";
-      let currentRatio = "9:16";
+      let currentRatio = "16:9";
       const currentCount = 1;
       let activeResultIndex = 0;
       let renderedResultImageId = null;
@@ -1405,6 +1411,17 @@
         clearPptxDeckQueue();
         setStatus("已清空合并队列。", "success");
       });
+      htmlPreviewMore.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const willOpen = htmlPreviewMoreMenu.hidden;
+        htmlPreviewMoreMenu.hidden = !willOpen;
+        htmlPreviewMore.setAttribute("aria-expanded", String(willOpen));
+      });
+      document.addEventListener("click", (event) => {
+        if (htmlPreviewMoreMenu.hidden) return;
+        if (htmlPreviewMoreGroup.contains(event.target)) return;
+        closeHtmlPreviewMoreMenu();
+      });
       htmlPreviewDialog.addEventListener("click", (event) => {
         if (event.target === htmlPreviewDialog) {
           closeHtmlPreview();
@@ -1567,7 +1584,7 @@
               "warning"
             );
           } else {
-            setStatus("编辑设计稿已导入 Figma。", "success");
+            setStatus("可编辑内容已导入 Figma。", "success");
           }
         }
         if (message && message.type === "ui-window-state") {
@@ -3659,7 +3676,7 @@
         if (!forceRecognition && cachedReview) {
           backgroundDecompositionReview = cachedReview;
           if (cachedReview.backgrounds.length === 0) {
-            setStatus("已复用上次 AI拆图结果：没有发现需要还原的完整背景。", "info");
+            setStatus("已复用上次切图结果：没有发现需要还原的完整背景。", "info");
             return;
           }
           openBackgroundDecompositionReview(activeImage.dataUrl);
@@ -3697,7 +3714,7 @@
             if (response.status === 404) {
               throw new Error("本地服务版本过旧，请关闭并重新运行“一键部署环境”");
             }
-            throw new Error(result.error || `AI拆图分析失败：${response.status}`);
+            throw new Error(result.error || `切图分析失败：${response.status}`);
           }
           const detectedAssets = Array.isArray(result.assets) ? result.assets : [];
           const backgrounds = Array.isArray(result.backgrounds) ? result.backgrounds : [];
@@ -4319,7 +4336,7 @@
         const activeImage = getActiveResultImage();
         const jobs = review ? buildBackgroundRepairJobs(review) : [];
         if (!review || !activeImage || activeImage.id !== review.imageId || jobs.length === 0) {
-          setStatus("拆图计划已失效，请重新执行 AI拆图。", "warning");
+          setStatus("切图计划已失效，请重新执行一键切图。", "warning");
           return;
         }
         ensureImageSliceState(activeImage);
@@ -4430,7 +4447,7 @@
           setStatus(`已生成 ${completedCount} 个完整背景切图。`, "success");
         } catch (error) {
           if (error?.name !== "AbortError") {
-            setStatus(`AI拆图失败：${error.message || String(error)}`, "error");
+            setStatus(`切图失败：${error.message || String(error)}`, "error");
           } else if (completedCount > 0) {
             setStatus(`已取消，保留已完成的 ${completedCount} 个完整背景。`, "warning");
           }
@@ -5604,7 +5621,7 @@
 
       function canLeaveDuringAiDecomposition() {
         if (!backgroundDecompositionRequest) return true;
-        setStatus("正在进行 AI拆图，请先等待完成或取消。", "warning");
+        setStatus("正在进行一键切图，请先等待完成或取消。", "warning");
         return false;
       }
 
@@ -5812,7 +5829,7 @@
       async function buildCurrentEditablePreviewContext() {
         const activeImage = getActiveResultImage();
         if (!activeImage?.dataUrl) {
-          throw new Error("没有可预览的当前设计稿");
+          throw new Error("没有可预览的当前 HTML 预览");
         }
         const localAssets = await collectEditableReferenceAssets(activeImage);
         const context = {
@@ -6702,6 +6719,7 @@
         htmlPreviewDownload.disabled = false;
         htmlPreviewImport.disabled = !activeHtmlPreviewResult?.canonicalHtml;
         updatePptxExportButtonState();
+        updateWorkflowStep();
       }
 
       function waitForHtmlPreviewReady() {
@@ -6722,8 +6740,16 @@
         htmlPreviewDownload.disabled = true;
         htmlPreviewImport.disabled = true;
         updatePptxExportButtonState();
+        pptxExportCompleted = false;
+        updateWorkflowStep();
+        closeHtmlPreviewMoreMenu();
         htmlPreviewPptxResult.hidden = true;
         htmlPreviewPptxResult.innerHTML = "";
+      }
+
+      function closeHtmlPreviewMoreMenu() {
+        htmlPreviewMoreMenu.hidden = true;
+        htmlPreviewMore.setAttribute("aria-expanded", "false");
       }
 
       function closeHtmlPreviewImportSettings() {
@@ -6874,11 +6900,11 @@
             || `${sanitizeFilename(payload.screen.name || "editable-design")}-html.zip`;
           triggerBlobDownload(await response.blob(), filename);
         } catch (error) {
-          console.error("下载编辑设计稿 HTML 失败。", error);
+          console.error("下载 HTML 失败。", error);
           setStatus(`下载 HTML 失败：${error.message || String(error)}`, "error");
         } finally {
           htmlPreviewDownload.disabled = !previewReady;
-          htmlPreviewDownload.textContent = "下载 HTML";
+          htmlPreviewDownload.textContent = "下载 HTML ZIP";
         }
       }
 
@@ -6935,7 +6961,7 @@
           console.error("加入合并队列失败。", error);
           setStatus(`加入合并队列失败：${error.message || String(error)}`, "error");
         } finally {
-          pptxAddToDeck.textContent = "加入队列";
+          pptxAddToDeck.textContent = "加入合并队列";
           updatePptxExportButtonState();
         }
       }
@@ -6982,6 +7008,8 @@
             || `${sanitizeFilename(filenameHint || "deck")}.pptx`;
           triggerBlobDownload(await response.blob(), filename);
           setStatus(`PPTX 已生成：${filename}（${slideCount} 页），已开始下载。`, "success");
+          pptxExportCompleted = true;
+          updateWorkflowStep();
           if (jobId) await renderPptxResult(jobId, filename);
         } catch (error) {
           console.error("转换 PPTX 失败。", error);
@@ -7034,6 +7062,26 @@
           : reason;
       }
 
+      /**
+       * The workflow is a straight line: 送图 -> 切图 -> 调整 -> 生成预览 -> 转 PPTX.
+       * This bar tells the user where they are, which the inherited design-tool UI
+       * never did.
+       */
+      function updateWorkflowStep() {
+        const image = getActiveResultImage();
+        const sliceCount = (image?.sliceManifest?.assets || []).length;
+        let step = 1;
+        if (image?.dataUrl) step = 2;
+        if (sliceCount > 0) step = 3;
+        if (activeHtmlPreviewResult?.canonicalHtml) step = 4;
+        if (pptxExportCompleted) step = 5;
+        workflowSteps.querySelectorAll(".workflow-step").forEach((element) => {
+          const index = Number(element.dataset.step);
+          element.classList.toggle("active", index === step);
+          element.classList.toggle("done", index < step);
+        });
+      }
+
       function uint8ArrayToBase64(value) {
         const bytes = value instanceof Uint8Array ? value : new Uint8Array(value || []);
         let binary = "";
@@ -7071,7 +7119,7 @@
           if (figExportUiMode.downloadsFig) {
             setBusy(true, "正在生成可导入 Figma 的 .fig 文件…");
             await downloadFigManifest("editable", manifest);
-            setStatus("设计稿 .fig 已开始下载。", "success");
+            setStatus("可编辑 .fig 已开始下载。", "success");
             return;
           }
           setBusy(true, "正在发送可编辑图层到 Figma…");
@@ -7090,7 +7138,7 @@
         } catch (error) {
           console.error("导入 H5 到 Figma 失败。", error);
           setStatus(
-            `${figExportUiMode.downloadsFig ? "下载设计稿 .fig" : "导入 Figma"}失败：${error.message || String(error)}`,
+            `${figExportUiMode.downloadsFig ? "导出可编辑 .fig" : "导入 Figma"}失败：${error.message || String(error)}`,
             "error"
           );
         } finally {
@@ -7107,8 +7155,8 @@
           await downloadFigManifest("slice", manifest);
           setStatus("切图 .fig 已开始下载。", "success");
         } catch (error) {
-          console.error("下载切图 .fig 失败。", error);
-          setStatus(`下载切图 .fig 失败：${error.message || String(error)}`, "error");
+          console.error("导出切图 .fig 失败。", error);
+          setStatus(`导出切图 .fig 失败：${error.message || String(error)}`, "error");
         } finally {
           setBusy(false);
         }
@@ -7615,7 +7663,7 @@
       async function requestEditableDesignHtmlPreview(signal, progressId = "", localAssets = null) {
         const activeImage = getActiveResultImage();
         if (!activeImage?.dataUrl) {
-          throw new Error("没有可预览的当前设计稿");
+          throw new Error("没有可预览的当前 HTML 预览");
         }
         const resolvedLocalAssets = localAssets
           || await collectEditableReferenceAssets(activeImage);
@@ -7641,7 +7689,7 @@
           throw new Error(result.error || `H5 preview request failed: ${response.status}`);
         }
         if (!isSupportedHtmlPreviewResult(result)) {
-          throw new Error("本地服务仍在运行旧版 AI 图层导入，请重启 npm run api 后重试");
+          throw new Error("本地服务仍在运行旧版生成 HTML 预览，请重启 npm run api 后重试");
         }
         return result;
       }
@@ -7930,6 +7978,7 @@
             pptxUnavailableReason: String(health?.capabilities?.pptxUnavailableReason || "")
           };
           updatePptxExportButtonState();
+          updateWorkflowStep();
           await loadApiConfigFromBackend(true);
           startupGate.hidden = true;
           void renderWorkspaceDraftList().catch((error) => {
@@ -8163,7 +8212,7 @@
           );
           currentManifest = structuredClone(draft.manifest);
           currentMode = draft.currentMode || "text-to-image";
-          currentRatio = draft.currentRatio || "9:16";
+          currentRatio = draft.currentRatio || "16:9";
           currentStyle = draft.currentStyle || "";
           widthInput.value = Math.round(clampNumber(Number(draft.width), 256, 4096, currentManifest.screen?.width || 750));
           heightInput.value = Math.round(clampNumber(Number(draft.height), 256, 4096, currentManifest.screen?.height || 1334));
@@ -8664,6 +8713,7 @@
         uiBusy = isBusy;
         updateImageToCodeButtonState();
         updatePptxExportButtonState();
+        updateWorkflowStep();
         updateFigmaFrameHtmlExportButtonState();
         generateButton.disabled = isBusy;
         generateButton.textContent = isBusy ? "生成中..." : "AI生图";

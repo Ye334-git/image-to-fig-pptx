@@ -20,7 +20,7 @@ test("one process serves the UI and versioned API while legacy API paths stay cl
 
   const ui = await fetch(`${baseUrl}/`);
   assert.equal(ui.status, 200);
-  assert.match(await ui.text(), /Image To HTML/);
+  assert.match(await ui.text(), /image-to-fig-pptx/);
 
   const health = await fetch(`${baseUrl}/api/v1/health`);
   const healthPayload = await health.json();

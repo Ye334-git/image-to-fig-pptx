@@ -48,6 +48,48 @@ test("the PPTX action is gated on the health capability, not on any API key", ()
   assert.match(app, /不需要 API Key/);
 });
 
+test("the workflow guidance replaces the inherited design-tool shell", () => {
+  const template = readSource("ui.template.html");
+  const nodeMode = readSource("state/fig-export-mode.js");
+
+  // Five-step bar with the three onward actions numbered to match it.
+  assert.match(template, /id="workflowSteps"/);
+  // step 1 also carries the "active" class, so match the prefix rather than the exact attribute
+  assert.equal((template.match(/class="workflow-step\b/g) || []).length, 5);
+  // Step names stay short; the buttons carry the full action names. Numbering both
+  // put two identical labels side by side, which read as noise.
+  assert.match(template, /<b>②<\/b>切图/);
+  assert.match(template, /<b>⑤<\/b>PPTX/);
+  assert.match(template, /disabled>一键切图<\/button>/);
+  assert.match(template, /disabled>生成 HTML 预览<\/button>/);
+  assert.match(template, /disabled>转 PPTX<\/button>/);
+  assert.doesNotMatch(template, /② 一键切图/);
+
+  // PPT vocabulary instead of the Figma plugin's wording.
+  assert.doesNotMatch(template, /AI拆图/);
+  assert.doesNotMatch(template, /AI 图层导入/);
+  assert.doesNotMatch(template, /设计稿/);
+  assert.doesNotMatch(nodeMode, /设计稿/);
+  assert.match(nodeMode, /sliceLabel: "导出切图 \.fig"/);
+
+  // PPT-first presets only, 16:9 selected by default.
+  const ratios = [...template.matchAll(/data-ratio="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(ratios, ["16:9", "4:3", "3:4", "custom"]);
+  assert.match(template, /class="choice active" type="button" data-ratio="16:9"/);
+
+  // Slicing history must not be hard-hidden any more (it is toggled by state instead).
+  assert.match(template, /<button id="draftsTrigger"[^>]*>/);
+  assert.doesNotMatch(template, /<button id="draftsTrigger"[^>]*\bhidden\b/);
+
+  // Secondary exports collapsed into one menu; the primary action is its own button.
+  assert.match(template, /id="htmlPreviewMoreMenu"/);
+  assert.match(template, /class="html-preview-pptx-primary"/);
+  const menuStart = template.indexOf('id="htmlPreviewMoreMenu"');
+  assert.ok(template.indexOf('id="htmlPreviewImport"') > menuStart, "editable .fig must live inside the menu");
+  assert.ok(template.indexOf('id="htmlPreviewDownload"') > menuStart, "HTML zip must live inside the menu");
+  assert.ok(template.indexOf('id="htmlPreviewPptx"') < menuStart, "转 PPTX must stay a first-class action");
+});
+
 test("multi-page decks are queued client side and merged server side", () => {
   const app = readSource("app.js");
   const template = readSource("ui.template.html");
@@ -68,5 +110,8 @@ test("the built UI is not stale", () => {
     assert.ok(built.includes(marker), `dist/ui.html is stale: missing ${marker}. Run npm run build.`);
   }
   // The slice .fig action must stay exposed (T2 regression guard).
-  assert.ok(built.includes("下载切图 .fig"), "dist/ui.html must expose the slice .fig action");
+  assert.ok(built.includes("导出切图 .fig"), "dist/ui.html must expose the slice .fig action");
+  // Workflow guidance added on top of the inherited design-tool shell.
+  assert.ok(built.includes("workflowSteps"), "dist/ui.html must carry the workflow step bar");
+  assert.ok(built.includes("htmlPreviewMoreMenu"), "dist/ui.html must carry the secondary export menu");
 });

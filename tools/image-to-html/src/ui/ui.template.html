@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image To HTML</title>
+    <title>image-to-fig-pptx</title>
     <style>
       /* __UI_STYLES__ */
     </style>
@@ -21,12 +21,19 @@
       <header class="topbar">
         <div class="brand">
           <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-title">Image To HTML</span>
+          <span class="brand-title">image-to-fig-pptx</span>
         </div>
+        <nav id="workflowSteps" class="workflow-steps" aria-label="工作流进度">
+          <span class="workflow-step active" data-step="1"><b>①</b>送图</span>
+          <span class="workflow-step" data-step="2"><b>②</b>切图</span>
+          <span class="workflow-step" data-step="3"><b>③</b>调整</span>
+          <span class="workflow-step" data-step="4"><b>④</b>预览</span>
+          <span class="workflow-step" data-step="5"><b>⑤</b>PPTX</span>
+        </nav>
         <div class="topbar-actions">
           <div class="import-action-group ai">
-            <button id="decomposeBackground" class="text-action place-action" type="button" disabled>AI拆图</button>
-            <button class="import-help" type="button" aria-label="说明 AI拆图" data-import-help="一次识别普通 PNG 切图和需要还原的完整主视觉背景；普通切图直接加入画布，背景确认范围后再生成">
+            <button id="decomposeBackground" class="text-action place-action" type="button" disabled>一键切图</button>
+            <button class="import-help" type="button" aria-label="说明 一键切图" data-import-help="一次识别需要保留的位图切图和需要还原的完整主视觉背景；切图直接加入画布，背景确认范围后再生成">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
             </button>
           </div>
@@ -36,16 +43,16 @@
             <button type="button" data-canvas-zoom="in" aria-label="放大">＋</button>
             <button type="button" data-canvas-zoom="fit">适应</button>
           </div>
-          <div class="import-actions" aria-label="AI 图层与代码重建">
+          <div class="import-actions" aria-label="切图与预览">
             <div class="import-action-group">
-              <button id="placeSource" class="text-action place-action" type="button" disabled>切图导入</button>
-              <button class="import-help" type="button" aria-label="说明切图导入" data-import-help="将当前背景和切图资产直接导入Figma">
+              <button id="placeSource" class="text-action place-action" type="button" disabled>导出切图 .fig</button>
+              <button class="import-help" type="button" aria-label="说明导出切图 .fig" data-import-help="把确认后的切图导出为 .fig 文件，可手动导入 Figma 继续调整。本工具不依赖 Figma 运行">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
               </button>
             </div>
             <div class="import-action-group ai">
-              <button id="placeAiLayers" class="text-action place-action" type="button" disabled>AI 图层导入</button>
-              <button class="import-help" type="button" aria-label="说明 AI 图层导入" data-import-help='确认切图后，AI识别画布内的文字、布局、切图资产，导入为可编辑的图层，识别准度依赖于"设置"->"图片理解模型"能力'>
+              <button id="placeAiLayers" class="text-action place-action" type="button" disabled>生成 HTML 预览</button>
+              <button class="import-help" type="button" aria-label="说明 生成 HTML 预览" data-import-help='确认切图后，AI 识别画布内的文字与布局，重建为 HTML/CSS 预览。这是转 PPTX 的必经一步，准度依赖"设置"中的图片理解模型'>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
               </button>
             </div>
@@ -91,11 +98,9 @@
             <section class="section">
               <div class="section-title">2. 选片比例</div>
               <div class="ratio-grid">
-                <button class="choice" type="button" data-ratio="1:1"><span class="choice-main">1:1</span><span class="choice-label">正方形</span><span class="choice-size">1024px × 1024px</span></button>
-                <button class="choice" type="button" data-ratio="16:9"><span class="choice-main">16:9</span><span class="choice-label">横屏</span><span class="choice-size">1920px × 1080px</span></button>
-                <button class="choice" type="button" data-ratio="4:3"><span class="choice-main">4:3</span><span class="choice-label">传统屏</span><span class="choice-size">1600px × 1200px</span></button>
-                <button class="choice" type="button" data-ratio="3:4"><span class="choice-main">3:4</span><span class="choice-label">竖屏</span><span class="choice-size">1200px × 1600px</span></button>
-                <button class="choice active" type="button" data-ratio="9:16"><span class="choice-main">9:16</span><span class="choice-label">手机屏</span><span class="choice-size">750px × 1334px</span></button>
+                <button class="choice active" type="button" data-ratio="16:9"><span class="choice-main">16:9</span><span class="choice-label">幻灯片横屏</span><span class="choice-size">1920px × 1080px</span></button>
+                <button class="choice" type="button" data-ratio="4:3"><span class="choice-main">4:3</span><span class="choice-label">传统横屏</span><span class="choice-size">1600px × 1200px</span></button>
+                <button class="choice" type="button" data-ratio="3:4"><span class="choice-main">3:4</span><span class="choice-label">竖版</span><span class="choice-size">1200px × 1600px</span></button>
                 <button class="choice" type="button" data-ratio="custom"><span class="choice-main">自定义</span><span class="choice-size">手动输入宽高</span></button>
               </div>
             </section>
@@ -126,7 +131,7 @@
 
           <button id="settingsTrigger" class="settings-trigger" type="button" aria-label="打开设置">设置</button>
           <button id="newWorkTrigger" class="new-work-trigger" type="button">开始新工作</button>
-          <button id="draftsTrigger" class="drafts-trigger" type="button" hidden>切图记录</button>
+          <button id="draftsTrigger" class="drafts-trigger" type="button">切图记录</button>
           <section id="draftsPanel" class="drafts-panel" aria-label="切图记录">
             <div class="drafts-head">
               <strong>切图记录</strong>
@@ -319,7 +324,7 @@
       <section id="backgroundDecompositionLoadingDialog" class="editable-preview-loading-dialog" aria-hidden="true" aria-modal="true" aria-labelledby="backgroundDecompositionLoadingTitle">
         <div class="editable-preview-loading-card" role="dialog">
           <div class="editable-preview-loading-spinner" aria-hidden="true"></div>
-          <strong id="backgroundDecompositionLoadingTitle">正在AI拆图</strong>
+          <strong id="backgroundDecompositionLoadingTitle">正在一键切图</strong>
           <span id="backgroundDecompositionLoadingDescription" class="editable-preview-loading-description">正在识别普通切图、完整背景和界面覆盖层…</span>
           <span id="backgroundDecompositionElapsed" class="editable-preview-elapsed">已用时 0 秒</span>
           <button id="backgroundDecompositionLoadingCancel" class="editable-preview-cancel" type="button">取消</button>
@@ -333,7 +338,7 @@
                 <strong id="backgroundDecompositionTitle">选择修补背景</strong>
                 <span>蓝框是完整背景，红框会从背景中移除。艺术字、插画和融入画面的品牌内容默认保留。</span>
               </div>
-              <div id="backgroundDecompositionZoomControls" class="canvas-zoom-controls html-preview-zoom-controls" aria-label="拆图画布缩放">
+              <div id="backgroundDecompositionZoomControls" class="canvas-zoom-controls html-preview-zoom-controls" aria-label="切图画布缩放">
                 <button type="button" data-canvas-zoom="out" aria-label="缩小">−</button>
                 <button class="html-preview-zoom-value" type="button" data-canvas-zoom="reset" aria-label="恢复到 100%">100%</button>
                 <button type="button" data-canvas-zoom="in" aria-label="放大">＋</button>
@@ -365,11 +370,11 @@
           </footer>
         </div>
       </section>
-      <section id="htmlPreviewDialog" class="html-preview-dialog" aria-modal="true" aria-label="AI图层导入预览">
+      <section id="htmlPreviewDialog" class="html-preview-dialog" aria-modal="true" aria-label="HTML 预览">
         <div class="html-preview-card">
           <div class="html-preview-head">
             <div class="html-preview-title">
-              <strong>AI图层导入预览</strong>
+              <strong>HTML 预览</strong>
               <div id="htmlPreviewZoomControls" class="canvas-zoom-controls html-preview-zoom-controls" aria-label="预览缩放">
                 <button type="button" data-canvas-zoom="out" aria-label="缩小">−</button>
                 <button class="html-preview-zoom-value" type="button" data-canvas-zoom="reset" aria-label="恢复到 100%">100%</button>
@@ -378,25 +383,28 @@
               </div>
             </div>
             <div class="html-preview-actions">
-              <button id="htmlPreviewRegenerate" class="html-preview-regenerate" type="button">重新 AI 识别</button>
-              <button id="htmlPreviewDownload" class="html-preview-download" type="button">下载 HTML</button>
+              <button id="htmlPreviewRegenerate" class="html-preview-regenerate" type="button">重新生成预览</button>
               <select id="pptxAspect" class="pptx-aspect" aria-label="PPTX 画布比例" title="PPTX 画布比例" disabled>
                 <option value="16:9">16:9</option>
                 <option value="html">原比例</option>
                 <option value="4:3">4:3</option>
                 <option value="3:4">3:4</option>
               </select>
-              <button id="htmlPreviewPptx" class="html-preview-download" type="button" disabled>转 PPTX</button>
-              <button id="pptxAddToDeck" class="html-preview-download" type="button" disabled>加入队列</button>
-              <div id="htmlPreviewImportSettingsGroup" class="html-preview-import-settings-group">
-                <button id="htmlPreviewImport" class="html-preview-import" type="button">下载可编辑设计稿 .fig</button>
-                <button id="htmlPreviewImportSettings" class="html-preview-import-settings" type="button" aria-label="导入设置" aria-haspopup="dialog" aria-expanded="false">
+              <button id="htmlPreviewPptx" class="html-preview-pptx-primary" type="button" disabled>转 PPTX</button>
+              <button id="pptxAddToDeck" class="html-preview-download" type="button" disabled title="把当前页加入合并队列，稍后与其它页一起生成一个 PPTX">加入合并队列</button>
+              <div id="htmlPreviewMoreGroup" class="html-preview-more-group">
+                <button id="htmlPreviewMore" class="html-preview-more" type="button" aria-haspopup="menu" aria-expanded="false">其他导出 ▾</button>
+                <div id="htmlPreviewMoreMenu" class="html-preview-more-menu" role="menu" hidden>
+                  <button id="htmlPreviewDownload" class="html-preview-more-item" type="button" role="menuitem">下载 HTML ZIP</button>
+                  <div id="htmlPreviewImportSettingsGroup" class="html-preview-import-settings-group">
+                    <button id="htmlPreviewImport" class="html-preview-import" type="button" role="menuitem">导出可编辑 .fig</button>
+                    <button id="htmlPreviewImportSettings" class="html-preview-import-settings" type="button" aria-label="导出设置" aria-haspopup="dialog" aria-expanded="false">
                   <svg class="html-preview-import-settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.16.38.37.72.6 1 .3.36.7.57 1.1.6h.1v4h-.09c-.42.03-.82.24-1.11.6-.23.28-.44.62-.6 1Z"></path>
                   </svg>
                 </button>
-                <div id="htmlPreviewImportSettingsPopover" class="html-preview-import-settings-popover" role="dialog" aria-label="设计稿捕获设置" hidden>
+                <div id="htmlPreviewImportSettingsPopover" class="html-preview-import-settings-popover" role="dialog" aria-label="HTML 捕获设置" hidden>
                   <label class="html-preview-import-settings-option">
                     <input id="htmlPreviewHighFidelityCapture" type="checkbox" />
                     <span>
@@ -404,6 +412,8 @@
                       <small>补全伪元素、滤镜、裁剪和复杂背景。</small>
                     </span>
                   </label>
+                </div>
+                  </div>
                 </div>
               </div>
               <button id="htmlPreviewClose" class="html-preview-close" type="button" aria-label="关闭">×</button>
