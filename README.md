@@ -106,30 +106,53 @@ GPT Image、Nano Banana 这类模型生成的 PPT 效果图观感很好，但直
 
 ---
 
-## 快速开始
+## 获取与运行
 
-**依赖已经全部打包在内，解压即用** —— 不需要 `npm install`，不需要构建，不依赖任何外部 agent 工具。
+有两种用法，**先确认你要哪一种**。
 
-1. 双击 **`start.cmd`**
-2. 浏览器自动打开 `http://127.0.0.1:18789`
-3. 在左下角「设置模型」里配置模型（见下文）
-4. 载入图片，按顶栏进度条走完五步
+### 方式一：开箱即用（推荐给使用者）
 
-命令行方式：
+前往 **[Releases](https://github.com/Ye334-git/image-to-fig-pptx/releases)** 下载 `image-to-fig-pptx-v*.zip`。
 
-```
-node bin/image-to-fig-pptx.cjs --port 18789 --no-open
-```
+**依赖全部内置，解压即用** —— 不需要 `npm install`，不需要构建，不依赖任何外部 agent 工具。
 
-可用参数：`--host`、`--port`、`--data-dir`、`--no-open`、`--help`。
+1. 解压到任意目录
+2. 双击 **`start.cmd`**
+3. 浏览器自动打开 `http://127.0.0.1:18789`
+4. 在左下角「设置模型」里配置模型（见下文）
+5. 载入图片，按顶栏进度条走完五步
 
-### 先自检一下（推荐）
+解压后的目录里有 `verify.cjs`，建议先自检：
 
 ```
 node verify.cjs
 ```
 
 它会检查包是否完整、本机是否具备运行条件，并且**真实生成一个 PPTX** 来确认链路通畅。不需要任何 API Key，也不写入你的数据目录。
+
+命令行参数：`--host`、`--port`、`--data-dir`、`--no-open`、`--help`。
+
+### 方式二：从源码运行（给要改代码的人）
+
+> **本仓库里只有源码**，不含 `node_modules`，也不含预构建界面。直接 clone 下来**跑不起来**，必须先安装依赖并构建。
+
+```powershell
+git clone https://github.com/Ye334-git/image-to-fig-pptx.git
+cd image-to-fig-pptx
+
+# 1. 引擎依赖（playwright-core、sharp、jszip …）
+cd tools/image-to-html  ; npm install
+# 2. 转换器依赖（dom-to-pptx、puppeteer、jszip）
+cd ../html-to-pptx      ; npm install
+# 3. 构建界面（dist/ui.html 是构建产物，不入库）
+cd ../image-to-html     ; npm run build
+# 4. 启动
+cd ../image-to-pptx     ; npm start
+```
+
+> ⚠️ **注意区分两个 `start.cmd`：**
+> - **发行包**根目录的 `start.cmd` —— 就是本项目的正确入口，双击即用。
+> - **源码仓库**根目录的 `start.cmd` —— 是仓库里遗留的旧脚本，启动的是上游 image-to-slice（端口 18787 / 18788），**不是本项目**。从源码运行时不要点它。
 
 ---
 
@@ -145,31 +168,44 @@ node verify.cjs
 
 缺失 Chrome / PowerPoint / Key 时**只会禁用对应功能**，其余照常可用，并在界面上说明原因。
 
-> 包内的 `sharp`、`@neplex/vectorizer` 是 Windows x64 原生模块，因此这个包**只能在 Windows x64 上运行**。这与「转 PPTX 依赖 Windows + PowerPoint」是一致的。
+> `sharp`、`@neplex/vectorizer` 是 Windows x64 原生模块，因此**本项目只能在 Windows x64 上运行**。这与「转 PPTX 依赖 Windows + PowerPoint」是一致的。
 
 ---
 
 ## 目录结构
+
+### 本仓库（源码）
+
+```text
+image-to-fig-pptx/
+├── README.md
+├── docs/
+│   ├── dev/                     需求、spec、tickets、验收记录
+│   └── images/                  README 里的对比图
+├── tools/
+│   ├── image-to-pptx/           启动器 + 打包脚本（standalone/ 是发行包外壳）
+│   ├── image-to-html/           切图 / HTML 引擎（server.js + src/ui + tests）
+│   └── html-to-pptx/            HTML → PPTX 转换器
+├── image-to-slice/              上游 image-to-slice 源码归档（MIT）
+├── htmls/                       示例产出
+└── 1.png / 2.png / 3.png        示例输入
+```
+
+### 发行包（Releases 里的 zip）
 
 ```text
 image-to-fig-pptx/
 ├── start.cmd                    双击启动
 ├── verify.cjs                   自检脚本
 ├── bin/image-to-fig-pptx.cjs    启动器
-├── docs/images/                 README 里的对比图
-├── engine/                      切图 / HTML 引擎（含预构建界面与依赖）
-│   ├── server.js
-│   ├── src/ui/                  界面源码
-│   ├── dist/ui.html             预构建界面
-│   └── node_modules/
-├── converter/                   HTML → PPTX 转换器（含依赖）
-│   ├── bin/html-to-pptx.mjs
-│   └── node_modules/
+├── docs/images/                 对比图
+├── engine/                      引擎（含预构建界面 dist/ui.html 与 node_modules）
+├── converter/                   转换器（含 node_modules）
 ├── examples/demo-slide/         自检用示例页面
 └── data/                        模型配置与工作区记录（首次运行后生成）
 ```
 
-整个文件夹可以复制/移动到任意位置，路径变化不影响运行。
+发行包由 `tools/image-to-pptx/scripts/build-standalone.ps1` 从本仓库生成，**整个文件夹可复制到任意位置运行**，不依赖本仓库。
 
 ---
 

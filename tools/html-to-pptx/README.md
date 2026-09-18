@@ -11,8 +11,9 @@
 
 ## 安装
 
+**在本工具所在的目录下**执行（源码仓库里是 `tools/html-to-pptx`；发行包里是 `converter/`，依赖已内置，无需安装）：
+
 ```powershell
-cd D:\Codex_Workspace\projects\260917pic2ppt\tools\html-to-pptx
 $env:PUPPETEER_SKIP_DOWNLOAD='true'
 npm install
 ```
