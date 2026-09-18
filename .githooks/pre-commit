@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Blocks commits that would leak API keys.
+#
+# Two layers:
+#   1. refuse to stage known secret-bearing paths
+#   2. scan the added lines of the staged diff for key shapes
+#
+# Placeholders in docs and examples are tolerated. Bypass deliberately with
+#   git commit --no-verify
+# only when you are certain the match is not a real credential.
+
+blocked=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^|/)\.env($|\.)|local-provider-config\.json$|(^|/)\.image-to-html-data/|(^|/)\.image-to-slice-history/|(^|/)model-config\.json$' || true)
+if [ -n "$blocked" ]; then
+  echo "pre-commit [密钥防护] 以下文件可能包含密钥，已阻止提交：" >&2
+  echo "$blocked" | sed 's/^/  /' >&2
+  echo "确认安全后用 git commit --no-verify 跳过。" >&2
+  exit 1
+fi
+
+pattern='(sk-[A-Za-z0-9_-]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|Bearer[[:space:]]+[A-Za-z0-9._-]{24,})'
+hits=$(git diff --cached --no-color -U0 --diff-filter=ACM | grep -E '^\+' | grep -vE '^\+\+\+' | grep -E "$pattern" || true)
+if [ -n "$hits" ]; then
+  echo "pre-commit [密钥防护] 暂存内容里检测到疑似密钥，已阻止提交：" >&2
+  echo "$hits" | sed -E 's/(sk-[A-Za-z0-9_-]{5})[A-Za-z0-9_-]+/\1…/g' | cut -c1-160 | sed 's/^/  /' >&2
+  echo "如果确认是占位符，用 git commit --no-verify 跳过。" >&2
+  exit 1
+fi
+
+exit 0

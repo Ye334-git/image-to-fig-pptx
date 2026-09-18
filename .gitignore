@@ -9,6 +9,14 @@ node_modules/
 tools/html-to-pptx/.work/
 tools/image-to-html/dist/
 
+# 密钥与凭据 —— 任何位置都不入库
+.env
+.env.*
+*.local-provider-config.json
+**/.image-to-html-data/
+**/.image-to-slice-history/
+**/.image-to-slice-data/
+
 # 本地数据与历史
 tools/image-to-html/.image-to-html-data/
 image-to-slice/.image-to-slice-history/
