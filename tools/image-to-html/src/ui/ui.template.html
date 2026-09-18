@@ -380,6 +380,13 @@
             <div class="html-preview-actions">
               <button id="htmlPreviewRegenerate" class="html-preview-regenerate" type="button">重新 AI 识别</button>
               <button id="htmlPreviewDownload" class="html-preview-download" type="button">下载 HTML</button>
+              <select id="pptxAspect" class="pptx-aspect" aria-label="PPTX 画布比例" title="PPTX 画布比例" disabled>
+                <option value="16:9">16:9</option>
+                <option value="html">原比例</option>
+                <option value="4:3">4:3</option>
+                <option value="3:4">3:4</option>
+              </select>
+              <button id="htmlPreviewPptx" class="html-preview-download" type="button" disabled>转 PPTX</button>
               <div id="htmlPreviewImportSettingsGroup" class="html-preview-import-settings-group">
                 <button id="htmlPreviewImport" class="html-preview-import" type="button">下载可编辑设计稿 .fig</button>
                 <button id="htmlPreviewImportSettings" class="html-preview-import-settings" type="button" aria-label="导入设置" aria-haspopup="dialog" aria-expanded="false">
@@ -402,6 +409,7 @@
             </div>
           </div>
           <div id="htmlPreviewBody" class="html-preview-body">
+            <div id="htmlPreviewPptxResult" class="html-preview-pptx-result" hidden></div>
             <div id="htmlPreviewViewport" class="html-preview-viewport">
               <div id="htmlPreviewStage" class="html-preview-stage">
                 <div id="htmlPreviewSizer" class="html-preview-sizer">

@@ -63,6 +63,9 @@
       const htmlPreviewRegenerate = document.getElementById("htmlPreviewRegenerate");
       const htmlPreviewDownload = document.getElementById("htmlPreviewDownload");
       const htmlPreviewImport = document.getElementById("htmlPreviewImport");
+      const htmlPreviewPptx = document.getElementById("htmlPreviewPptx");
+      const pptxAspectSelect = document.getElementById("pptxAspect");
+      const htmlPreviewPptxResult = document.getElementById("htmlPreviewPptxResult");
       const htmlPreviewImportSettingsGroup = document.getElementById("htmlPreviewImportSettingsGroup");
       const htmlPreviewImportSettings = document.getElementById("htmlPreviewImportSettings");
       const htmlPreviewImportSettingsPopover = document.getElementById("htmlPreviewImportSettingsPopover");
@@ -240,6 +243,9 @@
       }
 
       let modelConfigState = normalizeModelConfigPayload();
+      // Filled from /api/v1/health. HTML -> PPTX is fully local, so it depends on
+      // installed software rather than on any API key.
+      let pptxRuntimeCapabilities = { pptxConversionAvailable: false, pptxUnavailableReason: "" };
       let modelConfigApiKeyChanged = false;
       let revealedModelConfigKey = false;
       let editingModelConfigPurpose = "vision";
@@ -1377,6 +1383,9 @@
       });
       htmlPreviewDownload.addEventListener("click", async () => {
         await downloadEditableHtmlZip();
+      });
+      htmlPreviewPptx.addEventListener("click", async () => {
+        await exportEditablePptx();
       });
       htmlPreviewDialog.addEventListener("click", (event) => {
         if (event.target === htmlPreviewDialog) {
@@ -6674,6 +6683,7 @@
         initializeHtmlPreviewInspector();
         htmlPreviewDownload.disabled = false;
         htmlPreviewImport.disabled = !activeHtmlPreviewResult?.canonicalHtml;
+        updatePptxExportButtonState();
       }
 
       function waitForHtmlPreviewReady() {
@@ -6693,6 +6703,9 @@
         htmlPreviewReadyPromise = Promise.resolve();
         htmlPreviewDownload.disabled = true;
         htmlPreviewImport.disabled = true;
+        updatePptxExportButtonState();
+        htmlPreviewPptxResult.hidden = true;
+        htmlPreviewPptxResult.innerHTML = "";
       }
 
       function closeHtmlPreviewImportSettings() {
@@ -6700,17 +6713,17 @@
         htmlPreviewImportSettings.setAttribute("aria-expanded", "false");
       }
 
-      async function downloadEditableHtmlZip() {
+      /**
+       * Builds the export package shared by the HTML download and the PPTX export:
+       * the self-contained HTML/CSS/JS/assets bundle the server turns into either
+       * a ZIP or a PowerPoint deck.
+       */
+      async function buildEditableExportPayload() {
         const screen = currentManifest?.screen;
-        if (!activeHtmlPreviewResult?.canonicalHtml || !screen?.width || !screen?.height) return;
-        htmlPreviewDownload.disabled = true;
-        htmlPreviewDownload.textContent = "打包中...";
-        let previewReady = false;
-        try {
-          await flushWorkspaceDraftChanges();
-          await waitForHtmlPreviewReady();
-          previewReady = true;
-          const previewContext = await refreshCurrentEditablePreviewAssets();
+        if (!activeHtmlPreviewResult?.canonicalHtml || !screen?.width || !screen?.height) return null;
+        await flushWorkspaceDraftChanges();
+        await waitForHtmlPreviewReady();
+        const previewContext = await refreshCurrentEditablePreviewAssets();
           const referenceAssets = previewContext.localAssets;
           const doc = htmlPreviewFrame.contentDocument;
           if (!doc?.documentElement) {
@@ -6813,23 +6826,34 @@
             assets: assetFiles,
             textToBytes: textToUint8Array
           });
+          return {
+            screen,
+            files: files.map((file) => ({
+              name: file.name,
+              dataBase64: uint8ArrayToBase64(file.data)
+            }))
+          };
+      }
+
+      async function downloadEditableHtmlZip() {
+        htmlPreviewDownload.disabled = true;
+        htmlPreviewDownload.textContent = "打包中...";
+        let previewReady = false;
+        try {
+          const payload = await buildEditableExportPayload();
+          if (!payload) return;
+          previewReady = true;
           const response = await fetchBackend("/api/v1/exports/html", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              screen,
-              files: files.map((file) => ({
-                name: file.name,
-                dataBase64: uint8ArrayToBase64(file.data)
-              }))
-            })
+            body: JSON.stringify(payload)
           });
           if (!response.ok) {
-            const payload = await response.json().catch(() => ({}));
-            throw new Error(payload.error || `HTML ZIP 导出失败：${response.status}`);
+            const errorPayload = await response.json().catch(() => ({}));
+            throw new Error(errorPayload.error || `HTML ZIP 导出失败：${response.status}`);
           }
           const filename = readAttachmentFilename(response.headers.get("content-disposition"))
-            || `${sanitizeFilename(screen.name || "editable-design")}-html.zip`;
+            || `${sanitizeFilename(payload.screen.name || "editable-design")}-html.zip`;
           triggerBlobDownload(await response.blob(), filename);
         } catch (error) {
           console.error("下载编辑设计稿 HTML 失败。", error);
@@ -6838,6 +6862,75 @@
           htmlPreviewDownload.disabled = !previewReady;
           htmlPreviewDownload.textContent = "下载 HTML";
         }
+      }
+
+      /**
+       * Turns the same package into a native, editable PowerPoint deck.
+       * Entirely local: browser + dom-to-pptx + Microsoft PowerPoint, no API key.
+       */
+      async function exportEditablePptx() {
+        const aspect = pptxAspectSelect.value || "16:9";
+        htmlPreviewPptx.disabled = true;
+        htmlPreviewPptx.textContent = "转换中...";
+        htmlPreviewPptxResult.hidden = true;
+        htmlPreviewPptxResult.innerHTML = "";
+        try {
+          const payload = await buildEditableExportPayload();
+          if (!payload) return;
+          setStatus(`正在转换为可编辑 PPTX（${aspect === "html" ? "按 HTML 原比例" : aspect}），本机渲染通常需要一到两分钟…`, "info");
+          const response = await fetchBackend("/api/v1/exports/pptx", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ ...payload, aspect })
+          });
+          if (!response.ok) {
+            const errorPayload = await response.json().catch(() => ({}));
+            throw new Error(errorPayload.error || `PPTX 转换失败：${response.status}`);
+          }
+          const jobId = response.headers.get("x-pptx-job-id");
+          const slideCount = Number(response.headers.get("x-pptx-slide-count")) || 0;
+          const filename = readAttachmentFilename(response.headers.get("content-disposition"))
+            || `${sanitizeFilename(payload.screen.name || "deck")}.pptx`;
+          triggerBlobDownload(await response.blob(), filename);
+          setStatus(`PPTX 已生成：${filename}（${slideCount} 页），已开始下载。`, "success");
+          if (jobId) await renderPptxResult(jobId, filename);
+        } catch (error) {
+          console.error("转换 PPTX 失败。", error);
+          setStatus(`转换 PPTX 失败：${error.message || String(error)}`, "error");
+        } finally {
+          htmlPreviewPptx.textContent = "转 PPTX";
+          updatePptxExportButtonState();
+        }
+      }
+
+      async function renderPptxResult(jobId, filename) {
+        try {
+          const response = await fetchBackend(`/api/v1/pptx-jobs/${encodeURIComponent(jobId)}`);
+          if (!response.ok) return;
+          const job = await response.json();
+          const slides = Array.isArray(job.report?.powerpoint?.slides) ? job.report.powerpoint.slides : [];
+          const summary = slides.length
+            ? slides.map((slide) => `第 ${slide.slide} 页 ${slide.shapes} 个对象（${slide.textObjects} 文本 / ${slide.pictureObjects} 图片）`).join("，")
+            : `${job.slideCount || 0} 页`;
+          const images = (job.previews || [])
+            .map((preview) => `<img class="html-preview-pptx-thumb" src="${escapeHtml(preview.url)}" alt="${escapeHtml(preview.name)}" loading="lazy" />`)
+            .join("");
+          htmlPreviewPptxResult.innerHTML = `<div class="html-preview-pptx-head">已生成 ${escapeHtml(filename)} · ${escapeHtml(summary)}</div>`
+            + (images ? `<div class="html-preview-pptx-thumbs">${images}</div>` : "");
+          htmlPreviewPptxResult.hidden = false;
+        } catch (error) {
+          console.warn("读取 PPTX 结果失败：", error);
+        }
+      }
+
+      function updatePptxExportButtonState() {
+        const ready = Boolean(activeHtmlPreviewResult?.canonicalHtml);
+        const available = pptxRuntimeCapabilities.pptxConversionAvailable;
+        htmlPreviewPptx.disabled = !ready || !available || uiBusy;
+        htmlPreviewPptx.title = available
+          ? "把当前 HTML 预览转换为可编辑 PowerPoint（本机转换，不需要 API Key）"
+          : `无法转换 PPTX：${pptxRuntimeCapabilities.pptxUnavailableReason || "缺少本机依赖"}`;
+        pptxAspectSelect.disabled = !available;
       }
 
       function uint8ArrayToBase64(value) {
@@ -7731,6 +7824,11 @@
             htmlPreviewHighFidelityCapture.checked = false;
             htmlPreviewHighFidelityCaptureEnabled = false;
           }
+          pptxRuntimeCapabilities = {
+            pptxConversionAvailable: health?.capabilities?.pptxConversionAvailable === true,
+            pptxUnavailableReason: String(health?.capabilities?.pptxUnavailableReason || "")
+          };
+          updatePptxExportButtonState();
           await loadApiConfigFromBackend(true);
           startupGate.hidden = true;
           void renderWorkspaceDraftList().catch((error) => {
@@ -8464,6 +8562,7 @@
       function setBusy(isBusy, message) {
         uiBusy = isBusy;
         updateImageToCodeButtonState();
+        updatePptxExportButtonState();
         updateFigmaFrameHtmlExportButtonState();
         generateButton.disabled = isBusy;
         generateButton.textContent = isBusy ? "生成中..." : "AI生图";

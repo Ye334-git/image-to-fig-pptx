@@ -34,10 +34,21 @@ async function main() {
       throw new Error(`启动页未关闭：${startupMessage}${errors.length ? `；${errors.join(" | ")}` : ""}`);
     }
     if (await page.title() !== "Image To HTML") throw new Error("页面标题不正确");
-    for (const selector of ["#placeSource", "#exportSlices", "#exportFigmaFrameHtml"]) {
+    // Slice .fig export is part of this tool (requirements.md D1) and must be reachable.
+    const placeSource = page.locator("#placeSource");
+    if (!await placeSource.isVisible()) throw new Error("切图 .fig 入口不可见");
+    if ((await placeSource.innerText()).trim() !== "下载切图 .fig") {
+      throw new Error(`切图入口文案不正确：${(await placeSource.innerText()).trim()}`);
+    }
+    for (const selector of ["#exportSlices", "#exportFigmaFrameHtml"]) {
       if (await page.locator(selector).isVisible()) throw new Error(`已排除入口仍然可见：${selector}`);
     }
     if (!await page.locator("#placeAiLayers").isVisible()) throw new Error("AI 图层重建入口不可见");
+    // PPTX export controls ship in the shell; they stay disabled until a preview
+    // exists and the local runtime reports itself ready.
+    if (await page.locator("#htmlPreviewPptx").count() !== 1) throw new Error("缺少「转 PPTX」按钮");
+    if (await page.locator("#pptxAspect").count() !== 1) throw new Error("缺少 PPTX 比例选择");
+    if (!await page.locator("#htmlPreviewPptx").isDisabled()) throw new Error("无 HTML 预览时「转 PPTX」应保持禁用");
     await page.locator("#localImage").setInputFiles(sampleImage);
     await page.locator(".result-card").waitFor({ state: "visible", timeout: 15000 });
     await page.locator("#globalLoadingDialog").waitFor({ state: "hidden", timeout: 15000 });
