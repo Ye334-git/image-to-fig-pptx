@@ -1,5 +1,9 @@
 const path = require("node:path");
 const JSZip = require("jszip");
+const {
+  validateManifest,
+  validateEditableDesignManifest
+} = require("../../plugin/manifest-validation");
 
 function createExportRoutes({ readJson, exportFigManifest, sendBinary }) {
   return async function handleExportRoutes(request, response) {
@@ -16,15 +20,25 @@ function createExportRoutes({ readJson, exportFigManifest, sendBinary }) {
 
     if (request.method === "POST" && request.url === "/api/exports/fig") {
       const payload = await readJson(request, 150 * 1024 * 1024);
-      if (
-        !payload?.manifest
-        || !Array.isArray(payload.manifest.nodes)
-        || !payload.manifest.screen
-        || !String(payload.manifest.version || "").startsWith("editable-design-")
-      ) {
-        throw badRequest("只允许导出 AI 图层重建后的 Editable Manifest");
+      const kind = payload?.kind;
+      if (kind !== "slice" && kind !== "editable") {
+        throw badRequest("必须指定 .fig 导出类型：slice 或 editable");
       }
-      const bytes = await exportFigManifest({ kind: "editable", manifest: payload.manifest });
+      try {
+        if (kind === "slice") {
+          // Slice manifests come straight from the canvas editor: a locked
+          // background reference plus one node per sliced asset.
+          validateManifest(payload.manifest);
+        } else {
+          validateEditableDesignManifest(payload.manifest);
+          if (!String(payload.manifest.version || "").startsWith("editable-design-")) {
+            throw new Error("只允许导出 AI 图层重建后的 Editable Manifest");
+          }
+        }
+      } catch (error) {
+        throw badRequest(error.message || "非法的 .fig manifest");
+      }
+      const bytes = await exportFigManifest({ kind, manifest: payload.manifest });
       const filename = createFilename(payload.manifest?.screen?.name, ".fig");
       sendBinary(response, 200, bytes, {
         "content-type": "application/octet-stream",

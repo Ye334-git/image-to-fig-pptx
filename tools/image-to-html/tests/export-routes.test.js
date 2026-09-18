@@ -60,31 +60,87 @@ test("HTML export rejects unresolved trusted asset references", async () => {
   }), /未解析的 asset:/);
 });
 
-test("fig export route accepts editable manifests and rejects slice manifests", async () => {
-  let payload;
+const FIG_PIXEL_PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFgAI/ScL2WQAAAABJRU5ErkJggg==";
+
+function createFigRouteHarness(onExport = () => Buffer.from("fig")) {
+  const state = { payload: null, kinds: [] };
   const handler = createExportRoutes({
-    readJson: async () => payload,
+    readJson: async () => state.payload,
     exportFigManifest: async (input) => {
-      assert.equal(input.kind, "editable");
-      return Buffer.from("fig");
+      state.kinds.push(input.kind);
+      return onExport(input);
     },
     sendBinary: (response, status, bytes, headers) => Object.assign(response, { status, bytes, headers })
   });
-  const response = {};
-  payload = {
+  return {
+    state,
+    call: async () => {
+      const response = {};
+      const handled = await handler({ method: "POST", url: "/api/exports/fig" }, response);
+      assert.equal(handled, true);
+      return response;
+    }
+  };
+}
+
+test("fig export route dispatches both slice and editable manifests", async () => {
+  const harness = createFigRouteHarness();
+
+  harness.state.payload = {
+    kind: "editable",
     manifest: {
       version: "editable-design-experiment-0.4",
       screen: { name: "可编辑稿", width: 100, height: 100 },
       nodes: []
     }
   };
-  assert.equal(await handler({ method: "POST", url: "/api/exports/fig" }, response), true);
-  assert.equal(response.status, 200);
-  assert.match(response.headers["content-disposition"], /filename\*=UTF-8''/);
+  const editableResponse = await harness.call();
+  assert.equal(editableResponse.status, 200);
+  assert.match(editableResponse.headers["content-disposition"], /filename\*=UTF-8''/);
 
-  payload = { manifest: { screen: {}, assets: [] } };
-  await assert.rejects(
-    () => handler({ method: "POST", url: "/api/exports/fig" }, {}),
-    /只允许导出/
-  );
+  harness.state.payload = {
+    kind: "slice",
+    manifest: {
+      version: "1.0.0",
+      screen: { name: "切图稿", width: 750, height: 1334 },
+      previewImage: { dataUrl: FIG_PIXEL_PNG },
+      assets: [{
+        name: "hero_icon",
+        placement: { x: 10, y: 20, width: 30, height: 40 },
+        dataUrl: FIG_PIXEL_PNG
+      }]
+    }
+  };
+  const sliceResponse = await harness.call();
+  assert.equal(sliceResponse.status, 200);
+  assert.deepEqual(harness.state.kinds, ["editable", "slice"]);
+});
+
+test("fig export route rejects unknown kinds and malformed manifests", async () => {
+  const harness = createFigRouteHarness();
+  const call = harness.call;
+
+  harness.state.payload = { manifest: { screen: {}, assets: [] } };
+  await assert.rejects(call, /必须指定 \.fig 导出类型/);
+
+  harness.state.payload = { kind: "slice", manifest: { screen: { name: "x", width: 1, height: 1 }, assets: [] } };
+  await assert.rejects(call, /previewImage/);
+
+  harness.state.payload = {
+    kind: "slice",
+    manifest: {
+      screen: { name: "x", width: 1, height: 1 },
+      previewImage: { dataUrl: FIG_PIXEL_PNG },
+      assets: [{ name: "a", placement: { x: 1, y: 1, width: 1, height: 1 } }]
+    }
+  };
+  await assert.rejects(call, /dataUrl 或 svgData/);
+
+  harness.state.payload = {
+    kind: "editable",
+    manifest: { version: "not-editable", screen: { width: 1, height: 1 }, nodes: [] }
+  };
+  await assert.rejects(call, /只允许导出/);
+
+  assert.deepEqual(harness.state.kinds, []);
 });
