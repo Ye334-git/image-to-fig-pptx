@@ -86,9 +86,17 @@ Write-Host '复制启动器、示例与说明…'
 Copy-Item (Join-Path $shellSrc 'bin') $Destination -Recurse -Force
 Copy-Item (Join-Path $shellSrc 'examples') $Destination -Recurse -Force
 Copy-Item (Join-Path $shellSrc 'docs') $Destination -Recurse -Force
-foreach ($file in @('start.cmd', 'package.json', 'README.md', 'verify.cjs')) {
+foreach ($file in @('start.cmd', 'package.json', 'verify.cjs')) {
   Copy-Item (Join-Path $shellSrc $file) $Destination -Force
 }
+
+# 产品 README 放在仓库根目录，这样 GitHub 首页显示的就是它；包内 README 由同一份文本
+# 改写图片路径生成，只有一份来源，不会两边跑偏。
+$repoRoot = Split-Path -Parent $toolsRoot
+$readmeText = Get-Content (Join-Path $repoRoot 'README.md') -Raw -Encoding UTF8
+$readmeText = $readmeText.Replace('tools/image-to-pptx/standalone/docs/', 'docs/')
+[System.IO.File]::WriteAllText((Join-Path $Destination 'README.md'), $readmeText, (New-Object System.Text.UTF8Encoding($false)))
+Write-Host '  包内 README 由仓库根 README 生成（图片路径已改写）'
 
 $total = (Get-ChildItem $Destination -Recurse -File -Force | Measure-Object -Property Length -Sum).Sum / 1MB
 $count = (Get-ChildItem $Destination -Recurse -File -Force | Measure-Object).Count
