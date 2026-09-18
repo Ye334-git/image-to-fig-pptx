@@ -15,6 +15,7 @@ const {
 const PPTX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000;
 const MAX_RETAINED_JOBS = 5;
+const MAX_SLIDES_PER_DECK = 60;
 const ASPECT_ALIASES = new Map([
   ["html", "html"], ["source", "html"], ["original", "html"],
   ["16:9", "16:9"], ["16x9", "16:9"], ["wide", "16:9"],
@@ -80,6 +81,38 @@ function buildDeckConfig({ jobDir, slides, aspect }) {
 
 function buildSlideEntry({ htmlPath, width, height }) {
   return { html: htmlPath, selector: ".screen", viewport: { width, height } };
+}
+
+/**
+ * Accepts either a single page ({ screen, files }) or an ordered deck
+ * ({ slides: [{ screen, files }, ...] }). Every page keeps its own canvas size so
+ * pages rendered at different sizes still land on one common PPT page size.
+ */
+function resolveSlidePayloads(payload) {
+  const source = Array.isArray(payload?.slides) && payload.slides.length ? payload.slides : [payload];
+  if (source.length > MAX_SLIDES_PER_DECK) {
+    throw badRequest(`一次最多合并 ${MAX_SLIDES_PER_DECK} 页，当前 ${source.length} 页`);
+  }
+  return source.map((slide, index) => {
+    const width = Math.round(Number(slide?.screen?.width));
+    const height = Math.round(Number(slide?.screen?.height));
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) {
+      throw badRequest(`第 ${index + 1} 页缺少有效的画布尺寸 screen.width / screen.height`);
+    }
+    return {
+      index,
+      width,
+      height,
+      label: String(slide?.screen?.name || `slide-${index + 1}`),
+      payload: slide
+    };
+  });
+}
+
+function resolveDeckFilename(payload, slides) {
+  if (slides.length === 1) return sanitizeFilename(slides[0].label);
+  const deckName = String(payload?.name || "").trim();
+  return sanitizeFilename(deckName || `${slides[0].label}-${slides.length}页`);
 }
 
 async function extractZipInto(zipBytes, targetDir) {
@@ -178,27 +211,26 @@ function createPptxRoutes({
       throw serviceUnavailable(`无法转换 PPTX：${describePptxUnavailable(capabilities)}`);
     }
 
-    const width = Math.round(Number(payload?.screen?.width));
-    const height = Math.round(Number(payload?.screen?.height));
-    if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) {
-      throw badRequest("缺少有效的画布尺寸 screen.width / screen.height");
-    }
+    const slides = resolveSlidePayloads(payload);
     const aspect = normalizeAspect(payload?.aspect);
 
     const id = createJobId();
     const jobDir = path.join(workRoot, id);
-    const inputDir = path.join(jobDir, "input");
-    await fsp.mkdir(inputDir, { recursive: true });
-
-    const zipBytes = await createHtmlExportZip(payload);
-    await extractZipInto(zipBytes, inputDir);
+    const entries = [];
+    for (const slide of slides) {
+      const inputDir = path.join(jobDir, `input-${String(slide.index + 1).padStart(3, "0")}`);
+      await fsp.mkdir(inputDir, { recursive: true });
+      const zipBytes = await createHtmlExportZip(slide.payload);
+      await extractZipInto(zipBytes, inputDir);
+      entries.push(buildSlideEntry({
+        htmlPath: path.join(inputDir, "index.html"),
+        width: slide.width,
+        height: slide.height
+      }));
+    }
 
     const configPath = path.join(jobDir, "deck.json");
-    const config = buildDeckConfig({
-      jobDir,
-      aspect,
-      slides: [buildSlideEntry({ htmlPath: path.join(inputDir, "index.html"), width, height })]
-    });
+    const config = buildDeckConfig({ jobDir, aspect, slides: entries });
     await fsp.writeFile(configPath, JSON.stringify(config, null, 2));
 
     await enqueue(() => converter(configPath, { cliEntry: resolvePptxCliEntry() }));
@@ -224,8 +256,9 @@ function createPptxRoutes({
       id,
       dir: jobDir,
       previewDir,
-      filename: sanitizeFilename(payload?.screen?.name),
-      slideCount: Array.isArray(report?.powerpoint?.slides) ? report.powerpoint.slides.length : 0,
+      filename: resolveDeckFilename(payload, slides),
+      slideCount: Array.isArray(report?.powerpoint?.slides) ? report.powerpoint.slides.length : slides.length,
+      requestedSlides: slides.length,
       aspect,
       createdAt: new Date().toISOString(),
       report,
@@ -262,6 +295,10 @@ function createPptxRoutes({
         filename: job.filename,
         aspect: job.aspect,
         slideCount: job.slideCount,
+        requestedSlides: job.requestedSlides,
+        // A mismatch means a page did not survive the merge; the UI surfaces it
+        // instead of silently shipping a short deck.
+        droppedSlides: Math.max(0, (job.requestedSlides || 0) - (job.slideCount || 0)),
         createdAt: job.createdAt,
         report: job.report,
         previews: job.previewFiles.map((name) => ({
@@ -303,6 +340,7 @@ function createPptxRoutes({
 
 module.exports = {
   MAX_RETAINED_JOBS,
+  MAX_SLIDES_PER_DECK,
   PPTX_CONTENT_TYPE,
   buildDeckConfig,
   buildSlideEntry,
@@ -311,6 +349,8 @@ module.exports = {
   extractZipInto,
   isInsideDir,
   normalizeAspect,
+  resolveDeckFilename,
+  resolveSlidePayloads,
   runConverter,
   sanitizeFilename
 };

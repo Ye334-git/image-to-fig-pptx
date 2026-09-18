@@ -32,9 +32,11 @@ test("the UI reuses one export package for both HTML and PPTX", () => {
   assert.match(app, /async function downloadEditableHtmlZip\(\)/);
   assert.match(app, /async function exportEditablePptx\(\)/);
   // Both consumers must go through the shared builder rather than duplicating it.
-  assert.equal((app.match(/buildEditableExportPayload\(\)/g) || []).length, 3);
+  // one definition plus three consumers: HTML zip, single-page PPTX, deck queue
+  assert.equal((app.match(/buildEditableExportPayload\(\)/g) || []).length, 4);
   assert.match(app, /fetchBackend\("\/api\/v1\/exports\/pptx",/);
-  assert.match(app, /JSON\.stringify\(\{ \.\.\.payload, aspect \}\)/);
+  assert.match(app, /body: \{ \.\.\.payload, aspect: readPptxAspect\(\) \}/);
+  assert.match(app, /JSON\.stringify\(body\)/);
   assert.match(app, /function updatePptxExportButtonState\(\)/);
   assert.match(app, /pptxRuntimeCapabilities\.pptxConversionAvailable/);
 });
@@ -46,10 +48,23 @@ test("the PPTX action is gated on the health capability, not on any API key", ()
   assert.match(app, /不需要 API Key/);
 });
 
+test("multi-page decks are queued client side and merged server side", () => {
+  const app = readSource("app.js");
+  const template = readSource("ui.template.html");
+  assert.match(template, /id="pptxAddToDeck"/);
+  assert.match(template, /id="pptxDeckExport"/);
+  assert.match(template, /id="pptxDeckClear"/);
+  assert.match(template, /id="pptxDeckStrip"/);
+  assert.match(app, /let pptxDeckQueue = \[\]/);
+  // The merged request must send an ordered slides[] array of captured packages.
+  assert.match(app, /slides: pptxDeckQueue\.map\(\(item\) => \(\{ screen: item\.screen, files: item\.files \}\)\)/);
+  assert.match(app, /function clearPptxDeckQueue\(\)/);
+});
+
 test("the built UI is not stale", () => {
   assert.ok(fs.existsSync(DIST_UI), "dist/ui.html missing - run npm run build");
   const built = fs.readFileSync(DIST_UI, "utf8");
-  for (const marker of ["htmlPreviewPptx", "pptxAspect", "htmlPreviewPptxResult", "buildEditableExportPayload", "exportEditablePptx"]) {
+  for (const marker of ["htmlPreviewPptx", "pptxAspect", "htmlPreviewPptxResult", "buildEditableExportPayload", "exportEditablePptx", "pptxAddToDeck", "pptxDeckExport", "exportPptxDeck"]) {
     assert.ok(built.includes(marker), `dist/ui.html is stale: missing ${marker}. Run npm run build.`);
   }
   // The slice .fig action must stay exposed (T2 regression guard).

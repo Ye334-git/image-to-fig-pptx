@@ -11,6 +11,8 @@ const {
   extractZipInto,
   isInsideDir,
   normalizeAspect,
+  resolveDeckFilename,
+  resolveSlidePayloads,
   sanitizeFilename
 } = require("../src/server/routes/pptx-routes");
 const { createHtmlExportZip } = require("../src/server/routes/export-routes");
@@ -181,6 +183,117 @@ test("pptx route surfaces converter failures without leaking job paths", async (
     () => handler({ method: "POST", url: "/api/exports/pptx" }, {}),
     (error) => error.statusCode === 502 && /asset preflight/.test(error.message) && !error.message.includes(workRoot)
   );
+});
+
+test("a deck payload merges pages in order with per-page viewports", async (t) => {
+  const workRoot = await makeWorkRoot(t);
+  const responders = makeResponders();
+  let seenConfig = null;
+  const handler = createPptxRoutes({
+    readJson: async () => ({
+      aspect: "16:9",
+      slides: [
+        { screen: { name: "第一页", width: 1748, height: 900 }, files: exportPayload().files },
+        { screen: { name: "第二页", width: 3040, height: 1472 }, files: exportPayload().files }
+      ]
+    }),
+    sendJson: responders.sendJson,
+    sendBinary: responders.sendBinary,
+    workRoot,
+    resolveCapabilities: () => READY,
+    converter: async (configPath) => {
+      seenConfig = JSON.parse(await fsp.readFile(configPath, "utf8"));
+      await fsp.mkdir(seenConfig.renderDir, { recursive: true });
+      await fsp.writeFile(seenConfig.output, Buffer.from("PK-deck"));
+      await fsp.writeFile(seenConfig.output + ".report.json", JSON.stringify({
+        powerpoint: { slides: [{ slide: 1 }, { slide: 2 }] }
+      }));
+      await fsp.writeFile(path.join(seenConfig.renderDir, "slide-001.png"), Buffer.from("a"));
+      await fsp.writeFile(path.join(seenConfig.renderDir, "slide-002.png"), Buffer.from("b"));
+      return { stdout: "", stderr: "" };
+    }
+  });
+
+  assert.equal(await handler({ method: "POST", url: "/api/exports/pptx" }, {}), true);
+  assert.equal(seenConfig.slides.length, 2);
+  assert.equal(seenConfig.slides[0].viewport.width, 1748);
+  assert.equal(seenConfig.slides[1].viewport.width, 3040);
+  assert.notEqual(seenConfig.slides[0].html, seenConfig.slides[1].html, "each page needs its own input dir");
+  assert.equal(responders.state.binary.headers["x-pptx-slide-count"], "2");
+
+  const jobId = responders.state.binary.headers["x-pptx-job-id"];
+  await handler({ method: "GET", url: `/api/pptx-jobs/${jobId}` }, {});
+  assert.equal(responders.state.json.body.previews.length, 2);
+  assert.equal(responders.state.json.body.requestedSlides, 2);
+  assert.equal(responders.state.json.body.slideCount, 2);
+  assert.equal(responders.state.json.body.droppedSlides, 0);
+});
+
+test("a dropped page is reported rather than silently shipped", async (t) => {
+  const workRoot = await makeWorkRoot(t);
+  const responders = makeResponders();
+  const handler = createPptxRoutes({
+    readJson: async () => ({
+      slides: [
+        { screen: { name: "a", width: 100, height: 100 }, files: exportPayload().files },
+        { screen: { name: "b", width: 100, height: 100 }, files: exportPayload().files }
+      ]
+    }),
+    sendJson: responders.sendJson,
+    sendBinary: responders.sendBinary,
+    workRoot,
+    resolveCapabilities: () => READY,
+    converter: async (configPath) => {
+      const config = JSON.parse(await fsp.readFile(configPath, "utf8"));
+      await fsp.writeFile(config.output, Buffer.from("PK-deck"));
+      // Report only one surviving slide for a two-page request.
+      await fsp.writeFile(config.output + ".report.json", JSON.stringify({ powerpoint: { slides: [{ slide: 1 }] } }));
+      return { stdout: "", stderr: "" };
+    }
+  });
+  await handler({ method: "POST", url: "/api/exports/pptx" }, {});
+  const jobId = responders.state.binary.headers["x-pptx-job-id"];
+  await handler({ method: "GET", url: `/api/pptx-jobs/${jobId}` }, {});
+  assert.equal(responders.state.json.body.requestedSlides, 2);
+  assert.equal(responders.state.json.body.slideCount, 1);
+  assert.equal(responders.state.json.body.droppedSlides, 1);
+});
+
+test("deck payloads reject a page without canvas dimensions", async (t) => {
+  const workRoot = await makeWorkRoot(t);
+  const responders = makeResponders();
+  const handler = createPptxRoutes({
+    readJson: async () => ({
+      slides: [
+        { screen: { name: "ok", width: 100, height: 100 }, files: exportPayload().files },
+        { screen: { name: "broken" }, files: exportPayload().files }
+      ]
+    }),
+    sendJson: responders.sendJson,
+    sendBinary: responders.sendBinary,
+    workRoot,
+    resolveCapabilities: () => READY,
+    converter: async () => ({ stdout: "", stderr: "" })
+  });
+  await assert.rejects(() => handler({ method: "POST", url: "/api/exports/pptx" }, {}), /第 2 页/);
+});
+
+test("resolveSlidePayloads keeps a single-page payload working", () => {
+  const single = resolveSlidePayloads({ screen: { width: 10, height: 20 }, files: [] });
+  assert.equal(single.length, 1);
+  assert.equal(single[0].width, 10);
+  assert.equal(single[0].height, 20);
+  assert.equal(resolveDeckFilename({}, single), "slide-1.pptx");
+
+  const deck = resolveSlidePayloads({
+    slides: [
+      { screen: { name: "封面", width: 10, height: 20 }, files: [] },
+      { screen: { name: "正文", width: 30, height: 40 }, files: [] }
+    ]
+  });
+  assert.equal(deck.length, 2);
+  assert.equal(resolveDeckFilename({ slides: [] }, deck), "封面-2页.pptx");
+  assert.equal(resolveDeckFilename({ name: "项目汇报" }, deck), "项目汇报.pptx");
 });
 
 test("pptx route rejects a payload without canvas dimensions", async (t) => {

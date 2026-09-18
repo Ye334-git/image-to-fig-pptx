@@ -150,6 +150,51 @@ test("HTML slides convert to editable PPTX end to end", { timeout: 900000 }, asy
       + slide.textObjects + " text, " + slide.pictureObjects + " pictures)");
   });
 
+  await t.test("three fixtures merge into one three-page deck", async () => {
+    // Mirrors the real deliverable: 1.png / 2.png / 3.png each rebuilt as HTML,
+    // then merged into a single editable deck.
+    const decks = ["1.png-html", "2.png-html (1)", "3.png-html (1)"]
+      .map((name) => path.join(PROJECT_DIR, "htmls", name));
+    if (!decks.every((deckDir) => fs.existsSync(path.join(deckDir, "styles.css")))) {
+      t.skip("three-page fixtures not present");
+      return;
+    }
+
+    const slides = decks.map((deckDir, index) => {
+      const screen = readCanvasSize(fs.readFileSync(path.join(deckDir, "styles.css"), "utf8"));
+      assert.ok(screen, "fixture " + deckDir + " must declare a canvas size");
+      return {
+        screen: { name: "第" + (index + 1) + "页", ...screen },
+        files: collectExportFiles(deckDir)
+      };
+    });
+
+    const { bytes, job, slideCount } = await convert(baseUrl, {
+      aspect: "16:9",
+      name: "三页合并验收",
+      slides
+    });
+
+    assertValidPptx(bytes);
+    assert.equal(slideCount, 3, "expected one slide per requested page");
+    assert.equal(job.requestedSlides, 3);
+    assert.equal(job.droppedSlides, 0, "no page may be dropped silently");
+
+    const slidesReport = job.report.powerpoint.slides;
+    assert.equal(slidesReport.length, 3);
+    for (const [index, slide] of slidesReport.entries()) {
+      assert.equal(slide.slide, index + 1, "pages must keep queue order");
+      assert.ok(slide.textObjects > 0, "page " + (index + 1) + " needs editable text");
+      assert.ok(slide.pictureObjects > 0, "page " + (index + 1) + " needs picture objects");
+    }
+
+    assert.equal(job.previews.length, 3);
+    assert.ok(hasZipEntry(bytes, "ppt/slides/slide3.xml"), "deck must contain the third slide part");
+
+    console.log("    3 pages -> " + bytes.length + " bytes, shapes per page: "
+      + slidesReport.map((slide) => slide.shapes).join("/"));
+  });
+
   await t.test("a canvas wider than the viewport keeps its true size", async () => {
     // Regression guard for the fit-script trap: the exported script.js scales
     // .screen to the viewport, so without a pinned viewport this canvas would be

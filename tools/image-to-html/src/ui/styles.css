@@ -1970,6 +1970,38 @@ select {
   background: #ffffff;
 }
 
+.html-preview-pptx-deck {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 18px 10px;
+  padding: 8px 11px;
+  border: 1px solid #d8dbe2;
+  border-radius: 9px;
+  background: #eef1f6;
+  color: #343842;
+  font-size: 12px;
+}
+
+.html-preview-pptx-deck-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.html-preview-pptx-deck-clear {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid #d8dbe2;
+  border-radius: 8px;
+  color: #343842;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .html-preview-import {
   height: 34px;
   padding: 0 13px;

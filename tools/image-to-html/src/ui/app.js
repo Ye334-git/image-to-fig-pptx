@@ -66,6 +66,11 @@
       const htmlPreviewPptx = document.getElementById("htmlPreviewPptx");
       const pptxAspectSelect = document.getElementById("pptxAspect");
       const htmlPreviewPptxResult = document.getElementById("htmlPreviewPptxResult");
+      const pptxAddToDeck = document.getElementById("pptxAddToDeck");
+      const pptxDeckStrip = document.getElementById("pptxDeckStrip");
+      const pptxDeckInfo = document.getElementById("pptxDeckInfo");
+      const pptxDeckExport = document.getElementById("pptxDeckExport");
+      const pptxDeckClear = document.getElementById("pptxDeckClear");
       const htmlPreviewImportSettingsGroup = document.getElementById("htmlPreviewImportSettingsGroup");
       const htmlPreviewImportSettings = document.getElementById("htmlPreviewImportSettings");
       const htmlPreviewImportSettingsPopover = document.getElementById("htmlPreviewImportSettingsPopover");
@@ -246,6 +251,9 @@
       // Filled from /api/v1/health. HTML -> PPTX is fully local, so it depends on
       // installed software rather than on any API key.
       let pptxRuntimeCapabilities = { pptxConversionAvailable: false, pptxUnavailableReason: "" };
+      // Finished pages waiting to be merged into one deck, in queue order. Each
+      // page comes from its own workspace, so the package is captured on add.
+      let pptxDeckQueue = [];
       let modelConfigApiKeyChanged = false;
       let revealedModelConfigKey = false;
       let editingModelConfigPurpose = "vision";
@@ -1386,6 +1394,16 @@
       });
       htmlPreviewPptx.addEventListener("click", async () => {
         await exportEditablePptx();
+      });
+      pptxAddToDeck.addEventListener("click", async () => {
+        await addCurrentPageToDeck();
+      });
+      pptxDeckExport.addEventListener("click", async () => {
+        await exportPptxDeck();
+      });
+      pptxDeckClear.addEventListener("click", () => {
+        clearPptxDeckQueue();
+        setStatus("已清空合并队列。", "success");
       });
       htmlPreviewDialog.addEventListener("click", (event) => {
         if (event.target === htmlPreviewDialog) {
@@ -6864,24 +6882,95 @@
         }
       }
 
+      function readPptxAspect() {
+        return pptxAspectSelect.value || "16:9";
+      }
+
       /**
-       * Turns the same package into a native, editable PowerPoint deck.
+       * Turns one page into a native, editable PowerPoint deck.
        * Entirely local: browser + dom-to-pptx + Microsoft PowerPoint, no API key.
        */
       async function exportEditablePptx() {
-        const aspect = pptxAspectSelect.value || "16:9";
+        const payload = await buildEditableExportPayload();
+        if (!payload) return;
+        await runPptxExport({
+          body: { ...payload, aspect: readPptxAspect() },
+          filenameHint: payload.screen.name
+        });
+      }
+
+      /**
+       * Merges every queued page into a single deck, in queue order.
+       */
+      async function exportPptxDeck() {
+        if (!pptxDeckQueue.length) return;
+        await runPptxExport({
+          body: {
+            aspect: readPptxAspect(),
+            name: pptxDeckQueue.map((item, index) => item.label || `第 ${index + 1} 页`).join("-"),
+            slides: pptxDeckQueue.map((item) => ({ screen: item.screen, files: item.files }))
+          },
+          filenameHint: pptxDeckQueue[0].label
+        });
+      }
+
+      /**
+       * Each page is finished in its own workspace, so pages are queued as
+       * completed packages and merged in a single conversion run.
+       */
+      async function addCurrentPageToDeck() {
+        pptxAddToDeck.disabled = true;
+        pptxAddToDeck.textContent = "加入中...";
+        try {
+          const payload = await buildEditableExportPayload();
+          if (!payload) return;
+          pptxDeckQueue.push({
+            screen: payload.screen,
+            files: payload.files,
+            label: String(payload.screen.name || "").trim() || `第 ${pptxDeckQueue.length + 1} 页`
+          });
+          renderPptxDeckQueue();
+          setStatus(`已加入合并队列（共 ${pptxDeckQueue.length} 页）。`, "success");
+        } catch (error) {
+          console.error("加入合并队列失败。", error);
+          setStatus(`加入合并队列失败：${error.message || String(error)}`, "error");
+        } finally {
+          pptxAddToDeck.textContent = "加入队列";
+          updatePptxExportButtonState();
+        }
+      }
+
+      function renderPptxDeckQueue() {
+        if (!pptxDeckQueue.length) {
+          pptxDeckStrip.hidden = true;
+          pptxDeckInfo.textContent = "";
+          return;
+        }
+        pptxDeckInfo.textContent = `合并队列（${pptxDeckQueue.length} 页）：`
+          + pptxDeckQueue.map((item, index) => `${index + 1}. ${item.label}`).join("，");
+        pptxDeckStrip.hidden = false;
+      }
+
+      function clearPptxDeckQueue() {
+        pptxDeckQueue = [];
+        renderPptxDeckQueue();
+        updatePptxExportButtonState();
+      }
+
+      async function runPptxExport({ body, filenameHint }) {
+        const aspect = body.aspect;
         htmlPreviewPptx.disabled = true;
+        pptxAddToDeck.disabled = true;
+        pptxDeckExport.disabled = true;
         htmlPreviewPptx.textContent = "转换中...";
         htmlPreviewPptxResult.hidden = true;
         htmlPreviewPptxResult.innerHTML = "";
         try {
-          const payload = await buildEditableExportPayload();
-          if (!payload) return;
           setStatus(`正在转换为可编辑 PPTX（${aspect === "html" ? "按 HTML 原比例" : aspect}），本机渲染通常需要一到两分钟…`, "info");
           const response = await fetchBackend("/api/v1/exports/pptx", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ ...payload, aspect })
+            body: JSON.stringify(body)
           });
           if (!response.ok) {
             const errorPayload = await response.json().catch(() => ({}));
@@ -6890,7 +6979,7 @@
           const jobId = response.headers.get("x-pptx-job-id");
           const slideCount = Number(response.headers.get("x-pptx-slide-count")) || 0;
           const filename = readAttachmentFilename(response.headers.get("content-disposition"))
-            || `${sanitizeFilename(payload.screen.name || "deck")}.pptx`;
+            || `${sanitizeFilename(filenameHint || "deck")}.pptx`;
           triggerBlobDownload(await response.blob(), filename);
           setStatus(`PPTX 已生成：${filename}（${slideCount} 页），已开始下载。`, "success");
           if (jobId) await renderPptxResult(jobId, filename);
@@ -6918,6 +7007,9 @@
           htmlPreviewPptxResult.innerHTML = `<div class="html-preview-pptx-head">已生成 ${escapeHtml(filename)} · ${escapeHtml(summary)}</div>`
             + (images ? `<div class="html-preview-pptx-thumbs">${images}</div>` : "");
           htmlPreviewPptxResult.hidden = false;
+          if (Number(job.droppedSlides) > 0) {
+            setStatus(`警告：请求 ${job.requestedSlides} 页，结果只有 ${job.slideCount} 页，有 ${job.droppedSlides} 页未进入 PPTX。`, "warning");
+          }
         } catch (error) {
           console.warn("读取 PPTX 结果失败：", error);
         }
@@ -6926,11 +7018,20 @@
       function updatePptxExportButtonState() {
         const ready = Boolean(activeHtmlPreviewResult?.canonicalHtml);
         const available = pptxRuntimeCapabilities.pptxConversionAvailable;
-        htmlPreviewPptx.disabled = !ready || !available || uiBusy;
+        const blocked = !available || uiBusy;
+        const reason = available
+          ? ""
+          : `无法转换 PPTX：${pptxRuntimeCapabilities.pptxUnavailableReason || "缺少本机依赖"}`;
+        htmlPreviewPptx.disabled = !ready || blocked;
+        pptxAddToDeck.disabled = !ready || blocked;
+        pptxAspectSelect.disabled = !available;
+        pptxDeckExport.disabled = !pptxDeckQueue.length || blocked;
         htmlPreviewPptx.title = available
           ? "把当前 HTML 预览转换为可编辑 PowerPoint（本机转换，不需要 API Key）"
-          : `无法转换 PPTX：${pptxRuntimeCapabilities.pptxUnavailableReason || "缺少本机依赖"}`;
-        pptxAspectSelect.disabled = !available;
+          : reason;
+        pptxAddToDeck.title = available
+          ? "把当前页加入合并队列，稍后与其他页一起生成一个 PPTX"
+          : reason;
       }
 
       function uint8ArrayToBase64(value) {

@@ -387,6 +387,7 @@
                 <option value="3:4">3:4</option>
               </select>
               <button id="htmlPreviewPptx" class="html-preview-download" type="button" disabled>转 PPTX</button>
+              <button id="pptxAddToDeck" class="html-preview-download" type="button" disabled>加入队列</button>
               <div id="htmlPreviewImportSettingsGroup" class="html-preview-import-settings-group">
                 <button id="htmlPreviewImport" class="html-preview-import" type="button">下载可编辑设计稿 .fig</button>
                 <button id="htmlPreviewImportSettings" class="html-preview-import-settings" type="button" aria-label="导入设置" aria-haspopup="dialog" aria-expanded="false">
@@ -410,6 +411,11 @@
           </div>
           <div id="htmlPreviewBody" class="html-preview-body">
             <div id="htmlPreviewPptxResult" class="html-preview-pptx-result" hidden></div>
+            <div id="pptxDeckStrip" class="html-preview-pptx-deck" hidden>
+              <span id="pptxDeckInfo" class="html-preview-pptx-deck-info"></span>
+              <button id="pptxDeckExport" class="html-preview-download" type="button" disabled>生成合并 PPTX</button>
+              <button id="pptxDeckClear" class="html-preview-pptx-deck-clear" type="button">清空队列</button>
+            </div>
             <div id="htmlPreviewViewport" class="html-preview-viewport">
               <div id="htmlPreviewStage" class="html-preview-stage">
                 <div id="htmlPreviewSizer" class="html-preview-sizer">
