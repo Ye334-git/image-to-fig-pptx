@@ -1927,6 +1927,10 @@ select {
 }
 
 .pptx-aspect {
+  /* styles.css 里有一条给侧栏尺寸输入框用的全局 select{width:100%}，
+     这里的比例选择框必须把它收回来，否则会撑满整条动作栏并把后面的按钮挤出边界。 */
+  width: auto;
+  min-width: 80px;
   height: 34px;
   padding: 0 8px;
   border: 1px solid #d8dbe2;
@@ -2059,6 +2063,153 @@ select {
 .workflow-step.active {
   color: #ffffff;
   background: #111318;
+}
+
+/* 切图导出：主按钮 + 切换下拉 */
+.slice-export-group {
+  position: relative;
+  display: inline-flex;
+}
+
+.slice-export-split {
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.ghost-action {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid #d8dbe2;
+  border-radius: 9px 0 0 9px;
+  color: #343842;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 780;
+  white-space: nowrap;
+}
+
+.ghost-action:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.slice-export-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #d8dbe2;
+  border-left: 0;
+  border-radius: 0 9px 9px 0;
+  color: #343842;
+  background: #ffffff;
+  font-size: 11px;
+}
+
+.slice-export-toggle[aria-expanded="true"] {
+  background: #e8eaef;
+}
+
+.slice-export-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 40;
+  min-width: 268px;
+  max-width: 330px;
+  padding: 6px;
+  border: 1px solid #d8dbe2;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(17, 19, 24, 0.14);
+}
+
+.slice-export-item {
+  display: block;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  color: #343842;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.slice-export-item:hover {
+  background: #eef1f6;
+}
+
+.slice-export-item[aria-checked="true"] {
+  color: #111318;
+  background: #eef1f6;
+}
+
+.slice-export-item[aria-checked="true"]::after {
+  content: " ✓";
+}
+
+.slice-export-hint {
+  margin: 6px 4px 2px;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.slice-export-hint.warn {
+  color: #a15c00;
+}
+
+.primary-action {
+  height: 34px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 9px;
+  color: #ffffff;
+  background: #111318;
+  font-size: 13px;
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.primary-action:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+/* 按钮变多后会被 flex 压窄，中文就会溢出边框；禁止收缩并保持单行。 */
+.topbar-actions > *,
+.html-preview-actions > * {
+  flex-shrink: 0;
+}
+
+.html-preview-actions {
+  gap: 6px;
+}
+
+.html-preview-actions button,
+.html-preview-actions select {
+  white-space: nowrap;
+}
+
+/* Reclaim horizontal room so 重新生成预览 / 比例 / 转 PPTX / 加入合并队列 / 其他导出 / 关闭
+   all stay inside the header instead of spilling past its right edge. */
+.html-preview-actions > .html-preview-regenerate,
+.html-preview-actions > .html-preview-download,
+.html-preview-actions > .html-preview-pptx-primary,
+.html-preview-actions > .html-preview-more-group > .html-preview-more {
+  padding-left: 11px;
+  padding-right: 11px;
+}
+
+.cut-title-hint {
+  margin-left: 8px;
+  color: #8b909a;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .html-preview-pptx-result {

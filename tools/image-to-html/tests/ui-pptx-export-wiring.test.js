@@ -61,9 +61,27 @@ test("the workflow guidance replaces the inherited design-tool shell", () => {
   assert.match(template, /<b>②<\/b>切图/);
   assert.match(template, /<b>⑤<\/b>PPTX/);
   assert.match(template, /disabled>一键切图<\/button>/);
-  assert.match(template, /disabled>生成 HTML 预览<\/button>/);
+  assert.match(template, /disabled>生成 HTML<\/button>/);
   assert.match(template, /disabled>转 PPTX<\/button>/);
   assert.doesNotMatch(template, /② 一键切图/);
+
+  // Stage gating: the top bar starts with slicing only, and the post-slice actions
+  // stay in the DOM but hidden so nothing can be exported before there are slices.
+  assert.match(template, /id="sliceExportGroup" class="slice-export-group" hidden/);
+  assert.match(template, /id="generateHtmlGroup" class="import-action-group ai" hidden/);
+  assert.match(template, /id="sliceExport"[^>]*>导出切图包<\/button>/);
+  assert.match(template, /data-slice-export-mode="zip"/);
+  assert.match(template, /data-slice-export-mode="fig"/);
+  // The old always-visible .fig button is gone; .fig now lives behind the dropdown.
+  assert.doesNotMatch(template, /id="placeSource"/);
+  // Only 生成 HTML is the filled primary action at this stage.
+  assert.match(template, /id="placeAiLayers" class="text-action primary-action"/);
+  assert.match(template, /id="sliceExport" class="text-action ghost-action"/);
+  // The pre-HTML .fig caveat must be spelled out.
+  assert.match(template, /id="sliceExportFigHint"/);
+  assert.match(template, /不含文字/);
+  // Dragging is the only way to change layer order, so it has to be advertised.
+  assert.match(template, /cut-title-hint/);
 
   // PPT vocabulary instead of the Figma plugin's wording.
   assert.doesNotMatch(template, /AI拆图/);
@@ -110,7 +128,8 @@ test("the built UI is not stale", () => {
     assert.ok(built.includes(marker), `dist/ui.html is stale: missing ${marker}. Run npm run build.`);
   }
   // The slice .fig action must stay exposed (T2 regression guard).
-  assert.ok(built.includes("导出切图 .fig"), "dist/ui.html must expose the slice .fig action");
+  assert.ok(built.includes("导出切图到 .fig"), "dist/ui.html must expose the .fig slice export");
+  assert.ok(built.includes("sliceExportGroup"), "dist/ui.html must carry the stage-gated export group");
   // Workflow guidance added on top of the inherited design-tool shell.
   assert.ok(built.includes("workflowSteps"), "dist/ui.html must carry the workflow step bar");
   assert.ok(built.includes("htmlPreviewMoreMenu"), "dist/ui.html must carry the secondary export menu");

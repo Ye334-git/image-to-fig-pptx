@@ -24,7 +24,6 @@
       const uploadLocalButton = document.getElementById("uploadLocal");
       const localImageInput = document.getElementById("localImage");
       const decomposeBackgroundButton = document.getElementById("decomposeBackground");
-      const placeSourceButton = document.getElementById("placeSource");
       const placeAiLayersButton = document.getElementById("placeAiLayers");
       const exportFigmaFrameHtmlButton = document.getElementById("exportFigmaFrameHtml");
       const importHelpButtons = [...document.querySelectorAll("[data-import-help]")];
@@ -67,6 +66,12 @@
       const pptxAspectSelect = document.getElementById("pptxAspect");
       const htmlPreviewPptxResult = document.getElementById("htmlPreviewPptxResult");
       const workflowSteps = document.getElementById("workflowSteps");
+      const sliceExportGroup = document.getElementById("sliceExportGroup");
+      const sliceExport = document.getElementById("sliceExport");
+      const sliceExportToggle = document.getElementById("sliceExportToggle");
+      const sliceExportMenu = document.getElementById("sliceExportMenu");
+      const sliceExportFigHint = document.getElementById("sliceExportFigHint");
+      const generateHtmlGroup = document.getElementById("generateHtmlGroup");
       const htmlPreviewMoreGroup = document.getElementById("htmlPreviewMoreGroup");
       const htmlPreviewMore = document.getElementById("htmlPreviewMore");
       const htmlPreviewMoreMenu = document.getElementById("htmlPreviewMoreMenu");
@@ -363,7 +368,6 @@
       const figExportUiMode = getFigExportUiMode(isEmbeddedPluginHost());
 
       initUiWindowState();
-      placeSourceButton.textContent = figExportUiMode.sliceLabel;
       htmlPreviewImport.textContent = figExportUiMode.editableLabel;
       renderModelSettings();
       syncCharacterCount();
@@ -990,6 +994,53 @@
         await exportSlicePackage();
       });
 
+      /**
+       * 切图导出有两种去向：打包成 ZIP，或按当前层级顺序导出 .fig。
+       * 主按钮执行当前选中的方式，右侧下拉负责切换。
+       */
+      let sliceExportMode = "zip";
+      const SLICE_EXPORT_LABELS = { zip: "导出切图包", fig: "导出切图到 .fig" };
+
+      function updateSliceExportMode() {
+        sliceExport.textContent = SLICE_EXPORT_LABELS[sliceExportMode] || SLICE_EXPORT_LABELS.zip;
+        document.querySelectorAll("[data-slice-export-mode]").forEach((item) => {
+          item.setAttribute("aria-checked", String(item.dataset.sliceExportMode === sliceExportMode));
+        });
+        // 生成 HTML 之前导出 .fig 是拿不到文字的，这一点必须显式提示。
+        sliceExportFigHint.hidden = sliceExportMode !== "fig" || Boolean(activeHtmlPreviewResult?.canonicalHtml);
+      }
+
+      function closeSliceExportMenu() {
+        sliceExportMenu.hidden = true;
+        sliceExportToggle.setAttribute("aria-expanded", "false");
+      }
+
+      sliceExport.addEventListener("click", async () => {
+        if (sliceExportMode === "fig") {
+          await downloadSliceFig();
+        } else {
+          await exportSlicePackage();
+        }
+      });
+      sliceExportToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const willOpen = sliceExportMenu.hidden;
+        sliceExportMenu.hidden = !willOpen;
+        sliceExportToggle.setAttribute("aria-expanded", String(willOpen));
+      });
+      sliceExportMenu.addEventListener("click", (event) => {
+        const item = event.target.closest("[data-slice-export-mode]");
+        if (!item) return;
+        sliceExportMode = item.dataset.sliceExportMode;
+        updateSliceExportMode();
+        closeSliceExportMenu();
+      });
+      document.addEventListener("click", (event) => {
+        if (sliceExportMenu.hidden) return;
+        if (sliceExportGroup.contains(event.target)) return;
+        closeSliceExportMenu();
+      });
+
       document.querySelectorAll(".tab").forEach((button) => {
         button.addEventListener("click", () => {
           document.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
@@ -1230,14 +1281,6 @@
         }
       });
 
-      placeSourceButton.addEventListener("click", async () => {
-        if (!canStartFigmaImport()) return;
-        if (figExportUiMode.downloadsFig) {
-          await downloadSliceFig();
-        } else {
-          await placeSourceInFigma();
-        }
-      });
 
       placeAiLayersButton.addEventListener("click", async () => {
         if (!canStartFigmaImport()) return;
@@ -2072,6 +2115,7 @@
       function renderCutModules(manifest, animateReorder = false) {
         if (!manifest?.resultImages?.length) {
           renderEmptyCutModules();
+          updateWorkflowStep();
           return;
         }
         cutSection.classList.add("open");
@@ -2081,6 +2125,8 @@
         cutGrid.dataset.resultImageId = activeImage.id;
         ensureImageSliceState(activeImage);
         const assets = activeImage.sliceManifest.assets;
+        // Keep the step bar and the stage-gated top bar in sync with the slice set.
+        updateWorkflowStep();
         exportSlicesButton.disabled = assets.length === 0;
         transparentAllButton.disabled = assets.length === 0 || assets.every((asset) => asset.transparent);
         toggleAllSlicesButton.disabled = assets.length === 0;
@@ -5603,8 +5649,8 @@
 
       function setImportActionsDisabled(disabled) {
         importActionsDisabled = disabled;
-        placeSourceButton.disabled = disabled;
         placeAiLayersButton.disabled = disabled;
+        sliceExport.disabled = disabled;
         updateImageToCodeButtonState();
       }
 
@@ -7080,6 +7126,23 @@
           element.classList.toggle("active", index === step);
           element.classList.toggle("done", index < step);
         });
+        updateTopbarStage();
+      }
+
+      /**
+       * 顶栏按阶段只露出当前该用的动作，避免切图之前就能点导出。
+       *   阶段 1（未切图）：一键切图
+       *   阶段 2（已切图）：重新切图 / 导出切图 / 生成 HTML
+       *   阶段 3（已生成 HTML）：动作进入预览弹窗
+       */
+      function updateTopbarStage() {
+        const sliceCount = (getActiveResultImage()?.sliceManifest?.assets || []).length;
+        const hasSlices = sliceCount > 0;
+        decomposeBackgroundButton.textContent = hasSlices ? "重新切图" : "一键切图";
+        sliceExportGroup.hidden = !hasSlices;
+        generateHtmlGroup.hidden = !hasSlices;
+        if (!hasSlices) closeSliceExportMenu();
+        updateSliceExportMode();
       }
 
       function uint8ArrayToBase64(value) {

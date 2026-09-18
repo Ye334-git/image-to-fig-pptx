@@ -33,7 +33,7 @@
         <div class="topbar-actions">
           <div class="import-action-group ai">
             <button id="decomposeBackground" class="text-action place-action" type="button" disabled>一键切图</button>
-            <button class="import-help" type="button" aria-label="说明 一键切图" data-import-help="一次识别需要保留的位图切图和需要还原的完整主视觉背景；切图直接加入画布，背景确认范围后再生成">
+            <button class="import-help" type="button" aria-label="说明 一键切图" data-import-help="【切图是什么】把整张图片拆成可单独处理的素材：需要保留的位图（照片、截图、图标、插画）会被裁出来成为独立资产；纯色背景与简单形状不裁，交给后面的 HTML 重建。【为什么要切图】AI 无法可靠重画照片和复杂插画，只有把它们作为独立素材留下来，最终 PPTX 里这部分才不会糊、不走样，同时文字和简单图形仍然是可编辑的原生对象。【怎么用】点击后先确认背景范围，再进入切图调整：可以拖动左侧列表调整层级前后顺序，编号越大越靠上。" >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
             </button>
           </div>
@@ -43,19 +43,23 @@
             <button type="button" data-canvas-zoom="in" aria-label="放大">＋</button>
             <button type="button" data-canvas-zoom="fit">适应</button>
           </div>
-          <div class="import-actions" aria-label="切图与预览">
-            <div class="import-action-group">
-              <button id="placeSource" class="text-action place-action" type="button" disabled>导出切图 .fig</button>
-              <button class="import-help" type="button" aria-label="说明导出切图 .fig" data-import-help="把确认后的切图导出为 .fig 文件，可手动导入 Figma 继续调整。本工具不依赖 Figma 运行">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
-              </button>
+          <div id="sliceExportGroup" class="slice-export-group" hidden>
+            <div class="slice-export-split">
+              <button id="sliceExport" class="text-action ghost-action" type="button">导出切图包</button>
+              <button id="sliceExportToggle" class="slice-export-toggle" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="切换切图导出方式">▾</button>
             </div>
-            <div class="import-action-group ai">
-              <button id="placeAiLayers" class="text-action place-action" type="button" disabled>生成 HTML 预览</button>
-              <button class="import-help" type="button" aria-label="说明 生成 HTML 预览" data-import-help='确认切图后，AI 识别画布内的文字与布局，重建为 HTML/CSS 预览。这是转 PPTX 的必经一步，准度依赖"设置"中的图片理解模型'>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
-              </button>
+            <div id="sliceExportMenu" class="slice-export-menu" role="menu" hidden>
+              <button class="slice-export-item" type="button" role="menuitemradio" aria-checked="true" data-slice-export-mode="zip">导出切图包（ZIP）</button>
+              <button class="slice-export-item" type="button" role="menuitemradio" aria-checked="false" data-slice-export-mode="fig">导出切图到 .fig</button>
+              <p class="slice-export-hint">ZIP 内含每个切图与 manifest.json。.fig 按左侧列表当前的层级前后关系输出，可手动导入 Figma 继续调整。</p>
+              <p id="sliceExportFigHint" class="slice-export-hint warn" hidden>尚未生成 HTML：此时导出的 .fig <b>只有切图资源，不含文字</b>。需要文字请先点「生成 HTML」。</p>
             </div>
+          </div>
+          <div id="generateHtmlGroup" class="import-action-group ai" hidden>
+            <button id="placeAiLayers" class="text-action primary-action" type="button" disabled>生成 HTML</button>
+            <button class="import-help" type="button" aria-label="说明 生成 HTML" data-import-help='AI 识别画布内的文字与布局，重建为 HTML/CSS 预览。这是转 PPTX 的必经一步，识别准度取决于「设置」里的图片理解模型。生成后即可预览、转 PPTX，或导出可编辑 .fig。'>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.7"></path><path d="M12 17h.01"></path></svg>
+            </button>
           </div>
           <button id="exportFigmaFrameHtml" class="text-action place-action" type="button" aria-disabled="true" hidden>导出 HTML</button>
           <button id="windowToggle" class="window-toggle" type="button" aria-label="收起窗口" title="收起窗口">−</button>
@@ -117,6 +121,7 @@
             <div class="cut-head">
               <div class="cut-title-row">
                 <h2 class="cut-title">切图资产</h2>
+                <span class="cut-title-hint" title="左侧列表按层级从上到下排列，编号越大越靠上（越晚绘制）。按住条目拖动即可调整前后顺序。">拖动条目可调层级 · 编号越大越靠上</span>
                 <span id="resultCount"></span>
               </div>
               <div class="cut-head-actions">
