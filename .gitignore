@@ -1,0 +1,21 @@
+# 日志
+*.log
+
+# 依赖
+node_modules/
+
+# 构建产物
+.codex-build/
+tools/html-to-pptx/.work/
+tools/image-to-html/dist/
+
+# 本地数据与历史
+tools/image-to-html/.image-to-html-data/
+image-to-slice/.image-to-slice-history/
+image-to-slice/.local-provider-config.json
+
+# 测试产物
+tools/image-to-html/test-results/
+
+# 大体积可再生交付物（保留在磁盘，不入库）
+deliverables/

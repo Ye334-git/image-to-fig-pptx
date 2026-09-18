@@ -1,0 +1,1105 @@
+html,body{margin:0;padding:0;background:#eef0f4;}body{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"PingFang SC","Microsoft YaHei",sans-serif;}*{box-sizing:border-box;}.screen{width:1748px!important;min-width:1748px!important;height:900px!important;min-height:900px!important;max-width:none;overflow:hidden;position:relative;flex:0 0 auto!important;padding:0!important;border:0!important;transform:none!important;}img{display:block;}.screen [data-reference-asset]{position:absolute!important;object-fit:contain!important;object-position:center!important;background:transparent!important;}
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  p,
+  ul,
+  li,
+  figure,
+  button {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #d6d9df;
+    font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+  }
+
+  .fit-shell {
+    width: 100vw;
+    min-width: 1748px;
+    min-height: 900px;
+    overflow: auto;
+  }
+
+  .fit-box {
+    width: 1748px;
+    height: 900px;
+    margin: 0 auto;
+  }
+
+  .screen {
+    position: relative;
+    width: 1748px;
+    height: 900px;
+    overflow: hidden;
+    color: #101010;
+    background:
+      linear-gradient(90deg, rgba(238, 247, 255, 0.7), transparent 16%, transparent 84%, rgba(238, 247, 255, 0.7)),
+      #fff;
+  }
+
+  .slide-title {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    width: 430px;
+    height: 46px;
+    color: #08198f;
+    font-family: SimSun, "Microsoft YaHei", sans-serif;
+    font-size: 40px;
+    line-height: 46px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .title-rule-dark {
+    position: absolute;
+    left: 0;
+    top: 48px;
+    width: 1748px;
+    height: 3px;
+    background: #1424a2;
+  }
+
+  .title-rule-light {
+    position: absolute;
+    left: 0;
+    top: 53px;
+    width: 1278px;
+    height: 5px;
+    background: linear-gradient(90deg, #034fbd, #187be2);
+  }
+
+  .phase-strip {
+    position: absolute;
+    left: 8px;
+    top: 67px;
+    width: 1729px;
+    height: 45px;
+  }
+
+  .phase {
+    position: absolute;
+    top: 0;
+    height: 45px;
+    color: #fff;
+    background: linear-gradient(90deg, #0757c3, #0047ad);
+    font-size: 31px;
+    line-height: 45px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .phase-one {
+    left: 0;
+    width: 583px;
+    clip-path: polygon(0 0, 96% 0, 100% 50%, 96% 100%, 0 100%);
+  }
+
+  .phase-two {
+    left: 566px;
+    width: 612px;
+    padding-left: 20px;
+    clip-path: polygon(0 0, 96% 0, 100% 50%, 96% 100%, 0 100%, 4% 50%);
+  }
+
+  .phase-three {
+    left: 1154px;
+    width: 575px;
+    padding-left: 22px;
+    clip-path: polygon(0 0, 88% 0, 88% -36%, 100% 50%, 88% 136%, 88% 100%, 0 100%, 4% 50%);
+  }
+
+  .column {
+    position: absolute;
+    top: 116px;
+    height: 779px;
+    border: 1px solid #9fd6ff;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(249, 253, 255, 0.9);
+  }
+
+  .left-column {
+    left: 7px;
+    width: 572px;
+  }
+
+  .middle-column {
+    left: 584px;
+    width: 578px;
+  }
+
+  .right-column {
+    left: 1170px;
+    width: 573px;
+  }
+
+  .column-heading {
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: calc(100% - 4px);
+    height: 40px;
+    border-radius: 10px;
+    color: #fff;
+    background: linear-gradient(#0965d7, #0050b8);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    font-size: 27px;
+    line-height: 40px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .column-subheading {
+    position: absolute;
+    left: 2px;
+    top: 42px;
+    width: calc(100% - 4px);
+    height: 30px;
+    color: #06156f;
+    background: linear-gradient(#f8fcff, #dceffc);
+    border-radius: 7px;
+    font-size: 19px;
+    line-height: 30px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .content-block {
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #d5e9f6;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(240, 249, 255, 0.96), rgba(255, 255, 255, 0.97));
+  }
+
+  .section-title {
+    position: absolute;
+    left: 14px;
+    top: 4px;
+    height: 27px;
+    color: #03279c;
+    font-size: 19px;
+    line-height: 27px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .sub-label {
+    position: absolute;
+    color: #061b82;
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .caption {
+    position: absolute;
+    color: #07166f;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .small-caption {
+    position: absolute;
+    color: #151515;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .bullet-list {
+    position: absolute;
+    list-style: none;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+  }
+
+  .bullet-list li {
+    position: relative;
+    min-height: 22px;
+    padding-left: 21px;
+    white-space: nowrap;
+  }
+
+  .bullet-list li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: #052ec1;
+    transform: rotate(45deg);
+  }
+
+  .asset {
+    position: absolute;
+    display: block;
+    object-fit: fill;
+    z-index: 2;
+  }
+
+  .flow-icon {
+    position: absolute;
+    overflow: visible;
+    z-index: 3;
+  }
+
+  .flow-icon path {
+    fill: #0879d5;
+  }
+
+  /* Left column */
+  .left-environment {
+    left: 2px;
+    top: 73px;
+    width: 560px;
+    height: 207px;
+  }
+
+  .left-environment .environment-title {
+    left: 14px;
+    top: 3px;
+  }
+
+  .extreme-label {
+    left: 14px;
+    top: 3px;
+  }
+
+  .load-label {
+    left: 298px;
+    top: 3px;
+  }
+
+  .left-environment .typhoon-satellite-view {
+    left: 12px;
+    top: 37px;
+    width: 128px;
+    height: 79px;
+  }
+
+  .left-environment .giant-ocean-wave {
+    left: 147px;
+    top: 37px;
+    width: 130px;
+    height: 79px;
+  }
+
+  .left-environment .strong-ocean-current {
+    left: 12px;
+    top: 122px;
+    width: 128px;
+    height: 77px;
+  }
+
+  .left-environment .sea-ice-field {
+    left: 147px;
+    top: 122px;
+    width: 130px;
+    height: 77px;
+  }
+
+  .left-environment .marine-load-characteristics-plot {
+    left: 288px;
+    top: 37px;
+    width: 270px;
+    height: 170px;
+  }
+
+  .left-applications {
+    left: 2px;
+    top: 281px;
+    width: 560px;
+    height: 193px;
+  }
+
+  .left-applications .zhoushan-cross-sea-bridge {
+    left: 11px;
+    top: 32px;
+    width: 258px;
+    height: 88px;
+  }
+
+  .left-applications .putuo-offshore-wind-farm {
+    left: 289px;
+    top: 32px;
+    width: 261px;
+    height: 88px;
+  }
+
+  .bridge-caption {
+    left: 31px;
+    top: 122px;
+    width: 220px;
+  }
+
+  .wind-caption {
+    left: 307px;
+    top: 122px;
+    width: 224px;
+  }
+
+  .bridge-notes {
+    left: 7px;
+    top: 145px;
+  }
+
+  .wind-notes {
+    left: 283px;
+    top: 145px;
+  }
+
+  .left-monitoring {
+    left: 2px;
+    top: 475px;
+    width: 560px;
+    height: 298px;
+  }
+
+  .left-monitoring .porous-sensor-material-sample {
+    left: 27px;
+    top: 32px;
+    width: 89px;
+    height: 61px;
+  }
+
+  .left-monitoring .sensor-data-acquisition-board {
+    left: 168px;
+    top: 41px;
+    width: 80px;
+    height: 48px;
+  }
+
+  .left-monitoring .wireless-transmission-device {
+    left: 309px;
+    top: 31px;
+    width: 56px;
+    height: 59px;
+  }
+
+  .left-monitoring .cloud-monitoring-server {
+    left: 425px;
+    top: 31px;
+    width: 119px;
+    height: 62px;
+  }
+
+  .monitor-arrow-one {
+    left: 132px;
+    top: 53px;
+    width: 20px;
+    height: 15px;
+  }
+
+  .monitor-arrow-two {
+    left: 270px;
+    top: 53px;
+    width: 20px;
+    height: 15px;
+  }
+
+  .monitor-arrow-three {
+    left: 391px;
+    top: 53px;
+    width: 20px;
+    height: 15px;
+  }
+
+  .wireless-symbol {
+    position: absolute;
+    left: 314px;
+    top: 27px;
+    width: 47px;
+    height: 23px;
+    z-index: 4;
+  }
+
+  .wireless-symbol path {
+    fill: none;
+    stroke: #0b8dde;
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+
+  .sensor-caption {
+    left: 12px;
+    top: 94px;
+    width: 120px;
+  }
+
+  .acquisition-caption {
+    left: 150px;
+    top: 94px;
+    width: 120px;
+  }
+
+  .wireless-caption {
+    left: 279px;
+    top: 94px;
+    width: 120px;
+  }
+
+  .server-caption {
+    left: 413px;
+    top: 94px;
+    width: 135px;
+  }
+
+  .left-monitoring .bridge-vibration-response-plot {
+    left: 33px;
+    top: 151px;
+    width: 153px;
+    height: 76px;
+  }
+
+  .left-monitoring .wind-turbine-response-plot {
+    left: 206px;
+    top: 153px;
+    width: 168px;
+    height: 75px;
+  }
+
+  .left-monitoring .long-term-monitoring-stability-plot {
+    left: 393px;
+    top: 149px;
+    width: 163px;
+    height: 76px;
+  }
+
+  .monitor-notes {
+    left: 7px;
+    top: 236px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* Middle column */
+  .theory-one {
+    left: 2px;
+    top: 73px;
+    width: 568px;
+    height: 200px;
+  }
+
+  .theory-one .origami-supermaterial-structure {
+    left: 9px;
+    top: 37px;
+    width: 108px;
+    height: 96px;
+  }
+
+  .theory-one .lattice-supermaterial-structure {
+    left: 129px;
+    top: 37px;
+    width: 109px;
+    height: 96px;
+  }
+
+  .theory-one .rubber-linkage-component {
+    left: 250px;
+    top: 37px;
+    width: 108px;
+    height: 96px;
+  }
+
+  .theory-one .multistable-piezoelectric-voltage-plot {
+    left: 409px;
+    top: 34px;
+    width: 145px;
+    height: 104px;
+  }
+
+  .origami-caption {
+    left: 10px;
+    top: 135px;
+    width: 106px;
+  }
+
+  .lattice-caption {
+    left: 130px;
+    top: 135px;
+    width: 108px;
+  }
+
+  .rubber-caption {
+    left: 250px;
+    top: 135px;
+    width: 108px;
+  }
+
+  .theory-one-notes {
+    left: 3px;
+    top: 156px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .theory-two {
+    left: 2px;
+    top: 274px;
+    width: 568px;
+    height: 207px;
+  }
+
+  .theory-two .layered-plate-supermaterial {
+    left: 9px;
+    top: 35px;
+    width: 108px;
+    height: 98px;
+  }
+
+  .theory-two .dual-constraint-energy-harvester {
+    left: 129px;
+    top: 35px;
+    width: 109px;
+    height: 98px;
+  }
+
+  .theory-two .gyroscopic-energy-harvester {
+    left: 250px;
+    top: 35px;
+    width: 108px;
+    height: 98px;
+  }
+
+  .theory-two .low-frequency-energy-collection-plot {
+    left: 409px;
+    top: 31px;
+    width: 144px;
+    height: 111px;
+  }
+
+  .plate-caption {
+    left: 10px;
+    top: 135px;
+    width: 106px;
+  }
+
+  .dual-caption {
+    left: 128px;
+    top: 135px;
+    width: 112px;
+  }
+
+  .gyro-caption {
+    left: 251px;
+    top: 135px;
+    width: 107px;
+  }
+
+  .theory-two-notes {
+    left: 3px;
+    top: 158px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .theory-three {
+    left: 2px;
+    top: 482px;
+    width: 568px;
+    height: 147px;
+  }
+
+  .method-label-one {
+    left: 19px;
+    top: 30px;
+    width: 150px;
+  }
+
+  .method-label-two {
+    left: 196px;
+    top: 30px;
+    width: 154px;
+  }
+
+  .method-label-three {
+    left: 385px;
+    top: 30px;
+    width: 165px;
+  }
+
+  .theory-three .equivalent-current-model-diagram {
+    left: 20px;
+    top: 59px;
+    width: 154px;
+    height: 69px;
+  }
+
+  .theory-three .multiphysics-simulation-heatmap {
+    left: 192px;
+    top: 51px;
+    width: 143px;
+    height: 76px;
+  }
+
+  .theory-three .ai-inverse-design-network-diagram {
+    left: 356px;
+    top: 51px;
+    width: 196px;
+    height: 78px;
+  }
+
+  .method-bullets {
+    position: absolute;
+    left: 8px;
+    top: 128px;
+    width: 550px;
+    color: #111;
+    font-size: 13px;
+    line-height: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .publications {
+    left: 2px;
+    top: 630px;
+    width: 568px;
+    height: 143px;
+  }
+
+  .publications .nano-energy-journal-cover {
+    left: 12px;
+    top: 26px;
+    width: 46px;
+    height: 66px;
+  }
+
+  .publications .advanced-science-journal-cover {
+    left: 137px;
+    top: 26px;
+    width: 57px;
+    height: 66px;
+  }
+
+  .publications .advanced-functional-materials-journal-cover {
+    left: 259px;
+    top: 26px;
+    width: 60px;
+    height: 69px;
+  }
+
+  .publications .progress-in-materials-science-journal-cover {
+    left: 386px;
+    top: 25px;
+    width: 52px;
+    height: 68px;
+  }
+
+  .journal-metric {
+    position: absolute;
+    color: #03177a;
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .metric-one {
+    left: 64px;
+    top: 31px;
+  }
+
+  .metric-two {
+    left: 199px;
+    top: 31px;
+  }
+
+  .metric-three {
+    left: 325px;
+    top: 31px;
+  }
+
+  .metric-four {
+    left: 445px;
+    top: 31px;
+  }
+
+  .publication-more {
+    position: absolute;
+    left: 525px;
+    top: 63px;
+    color: #0423a1;
+    font-size: 21px;
+    line-height: 20px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .publication-notes {
+    left: 2px;
+    top: 98px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* Right column */
+  .fabrication {
+    left: 2px;
+    top: 73px;
+    width: 563px;
+    height: 171px;
+  }
+
+  .fabrication .additive-manufacturing-machine {
+    left: 8px;
+    top: 40px;
+    width: 99px;
+    height: 100px;
+  }
+
+  .fabrication .printed-micro-lattice-closeup {
+    left: 111px;
+    top: 40px;
+    width: 95px;
+    height: 103px;
+  }
+
+  .fabrication .microstructure-sem-image {
+    left: 209px;
+    top: 40px;
+    width: 115px;
+    height: 103px;
+  }
+
+  .fabrication .elemental-distribution-maps {
+    left: 327px;
+    top: 40px;
+    width: 110px;
+    height: 99px;
+  }
+
+  .fabrication .surface-morphology-afm-map {
+    left: 444px;
+    top: 40px;
+    width: 113px;
+    height: 99px;
+  }
+
+  .fabrication-caption-one {
+    left: 5px;
+    top: 142px;
+    width: 104px;
+  }
+
+  .fabrication-caption-two {
+    left: 108px;
+    top: 142px;
+    width: 101px;
+  }
+
+  .fabrication-caption-three {
+    left: 208px;
+    top: 142px;
+    width: 116px;
+  }
+
+  .fabrication-caption-four {
+    left: 325px;
+    top: 142px;
+    width: 114px;
+  }
+
+  .fabrication-caption-five {
+    left: 440px;
+    top: 142px;
+    width: 118px;
+  }
+
+  .performance {
+    left: 2px;
+    top: 245px;
+    width: 563px;
+    height: 181px;
+  }
+
+  .platform-label {
+    left: 12px;
+    top: 30px;
+    width: 130px;
+  }
+
+  .signal-label {
+    left: 143px;
+    top: 30px;
+    width: 176px;
+  }
+
+  .environment-label {
+    left: 333px;
+    top: 30px;
+    width: 210px;
+  }
+
+  .performance .mechanical-loading-platform {
+    left: 8px;
+    top: 56px;
+    width: 130px;
+    height: 118px;
+  }
+
+  .performance .multichannel-synchronized-signal-plot {
+    left: 146px;
+    top: 58px;
+    width: 176px;
+    height: 115px;
+  }
+
+  .performance .environmental-test-chamber {
+    left: 341px;
+    top: 59px;
+    width: 103px;
+    height: 113px;
+  }
+
+  .environment-notes {
+    position: absolute;
+    left: 455px;
+    top: 70px;
+    width: 98px;
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .system-integration {
+    left: 2px;
+    top: 427px;
+    width: 563px;
+    height: 136px;
+  }
+
+  .system-integration .integrated-sensor-component {
+    left: 11px;
+    top: 36px;
+    width: 81px;
+    height: 64px;
+  }
+
+  .system-integration .signal-acquisition-unit {
+    left: 123px;
+    top: 51px;
+    width: 61px;
+    height: 46px;
+  }
+
+  .system-integration .wireless-communication-router {
+    left: 223px;
+    top: 39px;
+    width: 73px;
+    height: 55px;
+  }
+
+  .system-integration .engineering-data-platform-dashboard {
+    left: 328px;
+    top: 33px;
+    width: 91px;
+    height: 67px;
+  }
+
+  .system-integration .offshore-engineering-platform {
+    left: 455px;
+    top: 34px;
+    width: 94px;
+    height: 63px;
+  }
+
+  .system-arrow-one {
+    left: 96px;
+    top: 58px;
+    width: 17px;
+    height: 15px;
+  }
+
+  .system-arrow-two {
+    left: 196px;
+    top: 58px;
+    width: 17px;
+    height: 15px;
+  }
+
+  .system-arrow-three {
+    left: 305px;
+    top: 58px;
+    width: 17px;
+    height: 15px;
+  }
+
+  .system-arrow-four {
+    left: 430px;
+    top: 58px;
+    width: 17px;
+    height: 15px;
+  }
+
+  .system-caption-one {
+    left: 2px;
+    top: 103px;
+    width: 100px;
+  }
+
+  .system-caption-two {
+    left: 108px;
+    top: 103px;
+    width: 91px;
+  }
+
+  .system-caption-three {
+    left: 207px;
+    top: 103px;
+    width: 102px;
+  }
+
+  .system-caption-four {
+    left: 319px;
+    top: 103px;
+    width: 111px;
+  }
+
+  .system-caption-five {
+    left: 447px;
+    top: 103px;
+    width: 109px;
+  }
+
+  .project-extension {
+    left: 2px;
+    top: 564px;
+    width: 563px;
+    height: 209px;
+  }
+
+  .extension-card {
+    position: absolute;
+    top: 30px;
+    height: 95px;
+    border: 1px solid #b9dff7;
+    border-radius: 7px;
+    background: linear-gradient(#e8f6ff, #fff);
+  }
+
+  .existing-foundation {
+    left: 10px;
+    width: 226px;
+  }
+
+  .future-development {
+    left: 309px;
+    width: 244px;
+  }
+
+  .extension-card h3 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 27px;
+    color: #04299d;
+    background: #d9efff;
+    font-size: 16px;
+    line-height: 27px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .extension-card .bullet-list {
+    left: 7px;
+    top: 29px;
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  .extension-card .bullet-list li {
+    min-height: 21px;
+  }
+
+  .extension-flow {
+    left: 248px;
+    top: 56px;
+    width: 48px;
+    height: 45px;
+  }
+
+  .extension-notes {
+    left: 3px;
+    top: 132px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+.export-inline-style-1{padding: 0px !important; border: 0px !important; transform: none !important;}
+.export-reference-asset-1{position:absolute!important;left:11px!important;top:35px!important;width:128px!important;height:79px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-2{position:absolute!important;left:146px!important;top:35px!important;width:130px!important;height:79px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-3{position:absolute!important;left:11px!important;top:120px!important;width:128px!important;height:77px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-4{position:absolute!important;left:146px!important;top:120px!important;width:130px!important;height:77px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-5{position:absolute!important;left:287px!important;top:35px!important;width:270px!important;height:170px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-6{position:absolute!important;left:10px!important;top:30px!important;width:258px!important;height:88px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-7{position:absolute!important;left:288px!important;top:30px!important;width:261px!important;height:88px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-8{position:absolute!important;left:26px!important;top:30px!important;width:89px!important;height:61px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-9{position:absolute!important;left:167px!important;top:39px!important;width:80px!important;height:48px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-10{position:absolute!important;left:308px!important;top:29px!important;width:56px!important;height:59px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-11{position:absolute!important;left:424px!important;top:29px!important;width:119px!important;height:62px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-12{position:absolute!important;left:32px!important;top:149px!important;width:153px!important;height:76px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-13{position:absolute!important;left:205px!important;top:151px!important;width:168px!important;height:75px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-14{position:absolute!important;left:392px!important;top:147px!important;width:163px!important;height:76px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-15{position:absolute!important;left:11px!important;top:35px!important;width:108px!important;height:96px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-16{position:absolute!important;left:131px!important;top:35px!important;width:109px!important;height:96px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-17{position:absolute!important;left:252px!important;top:35px!important;width:108px!important;height:96px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-18{position:absolute!important;left:411px!important;top:32px!important;width:145px!important;height:104px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-19{position:absolute!important;left:11px!important;top:33px!important;width:108px!important;height:98px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-20{position:absolute!important;left:131px!important;top:33px!important;width:109px!important;height:98px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-21{position:absolute!important;left:252px!important;top:33px!important;width:108px!important;height:98px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-22{position:absolute!important;left:411px!important;top:29px!important;width:144px!important;height:111px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-23{position:absolute!important;left:22px!important;top:54px!important;width:154px!important;height:69px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-24{position:absolute!important;left:194px!important;top:46px!important;width:143px!important;height:76px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-25{position:absolute!important;left:358px!important;top:46px!important;width:196px!important;height:78px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-26{position:absolute!important;left:14px!important;top:24px!important;width:46px!important;height:66px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-27{position:absolute!important;left:139px!important;top:24px!important;width:57px!important;height:66px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-28{position:absolute!important;left:261px!important;top:24px!important;width:60px!important;height:69px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-29{position:absolute!important;left:388px!important;top:23px!important;width:52px!important;height:68px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-30{position:absolute!important;left:7px!important;top:39px!important;width:99px!important;height:100px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-31{position:absolute!important;left:110px!important;top:39px!important;width:95px!important;height:103px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-32{position:absolute!important;left:208px!important;top:39px!important;width:115px!important;height:103px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-33{position:absolute!important;left:326px!important;top:39px!important;width:110px!important;height:99px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-34{position:absolute!important;left:443px!important;top:39px!important;width:113px!important;height:99px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-35{position:absolute!important;left:7px!important;top:54px!important;width:130px!important;height:118px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-36{position:absolute!important;left:145px!important;top:56px!important;width:176px!important;height:115px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-37{position:absolute!important;left:340px!important;top:57px!important;width:103px!important;height:113px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-38{position:absolute!important;left:10px!important;top:35px!important;width:81px!important;height:64px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-39{position:absolute!important;left:122px!important;top:50px!important;width:61px!important;height:46px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-40{position:absolute!important;left:222px!important;top:38px!important;width:73px!important;height:55px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-41{position:absolute!important;left:327px!important;top:32px!important;width:91px!important;height:67px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-42{position:absolute!important;left:454px!important;top:33px!important;width:94px!important;height:63px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+:root{--board-width:1748;--board-height:900;}
+html,body{margin:0;min-height:100%;background:#eef0f4;}
+body{overflow-x:hidden;}
+.fit-shell{width:100%;display:grid;place-items:start center;overflow-x:clip;}
+.fit-box{position:relative;overflow:hidden;}
+.screen{width:1748px;height:900px;transform-origin:top left;}

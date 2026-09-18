@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+  
+  <title>MM-GPENG结构与压电效应示意图</title>
+  
+<meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./styles.css"></head>
+<body>
+  <div class="fit-shell">
+    <div class="fit-box">
+      <main class="screen export-inline-style-1" aria-label="MM-GPENG结构与压电效应技术示意图">
+        <section class="piezo-panel" aria-label="压电效应">
+          <div class="diagram-label panel-letter-a">(a)</div>
+
+          <div class="constitutive-equation" aria-label="压电效应方程">
+            <span class="equation-j">J<sub class="subscript">D</sub> =</span>
+            <span class="equation-epsilon">ε</span>
+            <span class="fraction fraction-e">
+              <span>∂E</span>
+              <span class="fraction-denominator">∂t</span>
+            </span>
+            <span class="equation-plus">+</span>
+            <span class="fraction fraction-p">
+              <span>∂P<sub class="subscript">s</sub></span>
+              <span class="fraction-denominator">∂t</span>
+            </span>
+          </div>
+
+          <h2 class="diagram-label piezo-title">压电效应</h2>
+          <p class="diagram-label piezo-material-label">压电材料</p>
+          <p class="diagram-label initial-label">初始状态</p>
+          <p class="diagram-label deforming-label">变形中</p>
+          <p class="diagram-label maximum-label">最大变形</p>
+          <p class="diagram-label release-label">释放</p>
+
+          <img class="reference-art piezo-material-layer-response export-reference-asset-1" src="./assets/piezo_material_layer_response.png" alt="piezo_material_layer_response">
+
+          <img class="reference-art piezo-initial-state export-reference-asset-2" src="./assets/piezo_initial_state.png" alt="piezo_initial_state">
+
+          <img class="reference-art piezo-deformation-state export-reference-asset-3" src="./assets/piezo_deformation_state.png" alt="piezo_deformation_state">
+
+          <img class="reference-art piezo-release-state export-reference-asset-4" src="./assets/piezo_release_state.png" alt="piezo_release_state">
+
+          <svg class="left-connectors" viewBox="0 0 1000 1424" aria-hidden="true">
+            <defs>
+              <marker id="left-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                <path d="M1 1 L11 6 L1 11 Z" fill="#c84021"></path>
+              </marker>
+            </defs>
+            <path d="M592 747 L657 747" fill="none" stroke="#c84021" stroke-width="5" marker-end="url(#left-arrow)"></path>
+            <path d="M611 1247 L672 1247" fill="none" stroke="#c84021" stroke-width="5" marker-end="url(#left-arrow)"></path>
+          </svg>
+        </section>
+
+        <section class="structure-panel" aria-label="MM-GPENG结构示意">
+          <div class="diagram-label panel-letter-b">(b)</div>
+          <h1 class="diagram-label structure-title">MM-GPENG结构示意</h1>
+          <h2 class="diagram-label cell-title">MM胞元结构</h2>
+
+          <div class="vertical-material-box" aria-label="压电材料">
+            <p class="diagram-label vertical-material-text">压<br>电<br>材<br>料</p>
+          </div>
+
+          <img class="reference-art mm-gpeng-cell-structure export-reference-asset-5" src="./assets/mm_gpeng_cell_structure.png" alt="mm_gpeng_cell_structure">
+
+          <img class="reference-art cell-plate-dimensions export-reference-asset-6" src="./assets/cell_plate_dimensions.png" alt="cell_plate_dimensions">
+
+          <img class="reference-art front-microcell-distribution export-reference-asset-7" src="./assets/front_microcell_distribution.png" alt="front_microcell_distribution">
+
+          <img class="reference-art back-microcell-distribution export-reference-asset-8" src="./assets/back_microcell_distribution.png" alt="back_microcell_distribution">
+
+          <span class="diagram-label plus-symbol">+</span>
+          <span class="diagram-label piezo-layer-label">压电层</span>
+          <span class="diagram-label front-label-cn">前面</span>
+          <span class="diagram-label dimension-m">M</span>
+          <span class="diagram-label dimension-h">h</span>
+          <span class="diagram-label dimension-d">D</span>
+          <span class="diagram-label width-label">宽径</span>
+
+          <section class="lower-structure" aria-label="约束结构与装配胞元">
+            <div class="lower-divider-one"></div>
+            <div class="lower-divider-two"></div>
+
+            <img class="reference-art nested-mm-layer-constraint-diagram export-reference-asset-9" src="./assets/nested_mm_layer_constraint_diagram.png" alt="nested_mm_layer_constraint_diagram">
+
+            <span class="diagram-label outer-label">Outer</span>
+            <span class="diagram-label spiral-label">陀螺结构</span>
+            <span class="diagram-label sliding-label">滑动约束</span>
+            <span class="diagram-label height-label">高度 →</span>
+
+            <div class="middle-diagram" aria-label="中间层结构">
+              <div class="middle-shell"></div>
+              <div class="middle-arc"></div>
+              <span class="diagram-label middle-label">Middle</span>
+            </div>
+
+            <span class="diagram-label mm-layer-label">MM层</span>
+
+            <div class="joint-note">
+              <span class="diagram-label joint-note-text">Joints</span>
+            </div>
+
+            <img class="reference-art slice-01 export-reference-asset-12" src="./assets/slice_01.png" alt="slice_01">
+
+            <img class="reference-art slice-02 export-reference-asset-13" src="./assets/slice_02.png" alt="slice_02">
+
+            <span class="diagram-label inner-label">Inner</span>
+
+            <h3 class="diagram-label constraint-title-cn">陀螺结构</h3>
+            <p class="diagram-label constraint-title-en">constraints</p>
+            <p class="diagram-label inner-ring-label">内圈</p>
+            <p class="diagram-label sliding-unit-label">滑动单元</p>
+            <p class="diagram-label gravity-cn">中心重力</p>
+            <p class="diagram-label gravity-en">Center of<br>gravity</p>
+
+            <img class="reference-art gravity-constraint-cutaway export-reference-asset-10" src="./assets/gravity_constraint_cutaway.png" alt="gravity_constraint_cutaway">
+
+            <img class="reference-art assembled-cell-dimension-diagram export-reference-asset-11" src="./assets/assembled_cell_dimension_diagram.png" alt="assembled_cell_dimension_diagram">
+
+            <aside class="response-callout">
+              <p class="diagram-label response-text">
+                微电胞元调控动力响应，<br>
+                胞元信号叠加产生宏观力电输出
+              </p>
+            </aside>
+          </section>
+
+          <svg class="structure-connectors" viewBox="0 0 2046 1472" aria-hidden="true">
+            <defs>
+              <marker id="navy-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                <path d="M1 1 L11 6 L1 11 Z" fill="#00102c"></path>
+              </marker>
+            </defs>
+
+            <path d="M1785 195 L1910 78 L1959 78 L1961 202" fill="none" stroke="#00102c" stroke-width="5" stroke-dasharray="15 10"></path>
+            <path d="M1960 201 L2031 286" fill="none" stroke="#00102c" stroke-width="5" stroke-dasharray="15 10"></path>
+            <path d="M1730 202 L1730 548" fill="none" stroke="#00102c" stroke-width="4" marker-start="url(#navy-arrow)" marker-end="url(#navy-arrow)"></path>
+            <path d="M1956 240 L1956 527" fill="none" stroke="#00102c" stroke-width="4" marker-start="url(#navy-arrow)" marker-end="url(#navy-arrow)"></path>
+            <path d="M1977 724 L1977 1137" fill="none" stroke="#00102c" stroke-width="4" marker-start="url(#navy-arrow)" marker-end="url(#navy-arrow)"></path>
+            <path d="M1565 1180 L1905 1180" fill="none" stroke="#00102c" stroke-width="4" marker-start="url(#navy-arrow)" marker-end="url(#navy-arrow)"></path>
+            <path d="M1471 730 L1347 814" fill="none" stroke="#00102c" stroke-width="4" marker-end="url(#navy-arrow)"></path>
+          </svg>
+        </section>
+
+        <div class="footer-rule"></div>
+      </main>
+    </div>
+  </div>
+
+<script src="./script.js"></script></body></html>

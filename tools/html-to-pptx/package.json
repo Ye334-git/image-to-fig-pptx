@@ -1,0 +1,22 @@
+{
+  "name": "@local/html-to-pptx-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Convert ordered HTML slides into one editable PPTX and render final PowerPoint previews.",
+  "bin": {
+    "html-to-pptx": "./bin/html-to-pptx.mjs"
+  },
+  "scripts": {
+    "convert": "node ./bin/html-to-pptx.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "dependencies": {
+    "dom-to-pptx": "2.1.2",
+    "jszip": "3.10.1",
+    "puppeteer": "25.1.0"
+  }
+}

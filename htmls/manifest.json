@@ -1,0 +1,323 @@
+{
+  "version": "1.0.0",
+  "exportedAt": "2026-09-17T10:51:01.495Z",
+  "sourcePrompt": "2.png",
+  "selectedImageIndex": 1,
+  "screen": {
+    "name": "2.png",
+    "width": 3040,
+    "height": 1472
+  },
+  "assets": [
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_1",
+      "name": "piezoelectric_beam_polarization_diagram",
+      "filename": "assets/piezoelectric_beam_polarization_diagram.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 315,
+        "y": 359,
+        "width": 537,
+        "height": 217
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_2",
+      "name": "piezoelectric_beam_initial_state",
+      "filename": "assets/piezoelectric_beam_initial_state.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 45,
+        "y": 632,
+        "width": 617,
+        "height": 249
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_3",
+      "name": "piezoelectric_beam_maximum_deformation",
+      "filename": "assets/piezoelectric_beam_maximum_deformation.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 428,
+        "y": 863,
+        "width": 545,
+        "height": 250
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_4",
+      "name": "piezoelectric_beam_release_state",
+      "filename": "assets/piezoelectric_beam_release_state.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 43,
+        "y": 1145,
+        "width": 627,
+        "height": 247
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_5",
+      "name": "mm_gpeng_cell_cross_section",
+      "filename": "assets/mm_gpeng_cell_cross_section.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 1135,
+        "y": 127,
+        "width": 484,
+        "height": 486
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_6",
+      "name": "piezoelectric_layer_sheet",
+      "filename": "assets/piezoelectric_layer_sheet.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 1800,
+        "y": 104,
+        "width": 230,
+        "height": 478
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_7",
+      "name": "mm_cell_front_particle_layer",
+      "filename": "assets/mm_cell_front_particle_layer.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 2173,
+        "y": 109,
+        "width": 235,
+        "height": 518
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_8",
+      "name": "mm_cell_back_particle_layer",
+      "filename": "assets/mm_cell_back_particle_layer.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 2448,
+        "y": 108,
+        "width": 231,
+        "height": 500
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_9",
+      "name": "mm_cell_outer_shell_component",
+      "filename": "assets/mm_cell_outer_shell_component.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": true,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "radii": {
+        "topLeft": 0,
+        "topRight": 0,
+        "bottomRight": 0,
+        "bottomLeft": 0
+      },
+      "placement": {
+        "x": 1077,
+        "y": 662,
+        "width": 232,
+        "height": 226
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_10",
+      "name": "mm_cell_middle_shell_component",
+      "filename": "assets/mm_cell_middle_shell_component.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": true,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "radii": {
+        "topLeft": 0,
+        "topRight": 0,
+        "bottomRight": 0,
+        "bottomLeft": 0
+      },
+      "placement": {
+        "x": 1177,
+        "y": 887,
+        "width": 252,
+        "height": 246
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_11",
+      "name": "mm_cell_inner_core_component",
+      "filename": "assets/mm_cell_inner_core_component.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "radii": {
+        "topLeft": 0,
+        "topRight": 0,
+        "bottomRight": 0,
+        "bottomLeft": 0
+      },
+      "placement": {
+        "x": 1323,
+        "y": 1103,
+        "width": 304,
+        "height": 310
+      }
+    },
+    {
+      "id": "slice_ai_decompose_background_mu5dhnli_y83pbdq_12",
+      "name": "mm_gpeng_cell_dimension_diagram",
+      "filename": "assets/mm_gpeng_cell_dimension_diagram.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": true,
+      "aiTransparent": true,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "radii": {
+        "topLeft": 0,
+        "topRight": 0,
+        "bottomRight": 0,
+        "bottomLeft": 0
+      },
+      "placement": {
+        "x": 2457,
+        "y": 673,
+        "width": 492,
+        "height": 497
+      }
+    },
+    {
+      "id": "slice_1_mu5elsek_13",
+      "name": "slice_01",
+      "filename": "assets/slice_01.png",
+      "svgFilename": null,
+      "format": "png",
+      "formats": [
+        "png"
+      ],
+      "transparent": false,
+      "aiTransparent": false,
+      "aiRedrawn": false,
+      "hasOriginalRaster": true,
+      "selectedImageIndex": 1,
+      "radius": 0,
+      "placement": {
+        "x": 2001,
+        "y": 679,
+        "width": 422,
+        "height": 733
+      }
+    }
+  ]
+}

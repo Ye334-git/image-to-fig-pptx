@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+
+<title>3.2 项目科学性</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./styles.css"></head>
+<body>
+<div class="fit-shell">
+<div class="fit-box">
+<main class="screen">
+  <h1 class="title">3.2 项目科学性</h1>
+  <div class="rule-one"></div>
+  <div class="rule-two"></div>
+  <div class="rule-three"></div>
+
+  <header class="flow-header">
+    <div class="flow-step flow-a">需求导向</div>
+    <div class="flow-step flow-b">原理支撑</div>
+    <div class="flow-step flow-c">工艺验证</div>
+  </header>
+
+  <section class="column col-left">
+    <h2 class="column-heading">海洋工程安全服役需求急迫化</h2>
+    <p class="column-subtitle">基于工程实践与环境特征的科学需求</p>
+
+    <article class="section left-challenge">
+      <h3 class="section-title challenge-title">极端海洋环境挑战</h3>
+      <h3 class="section-title environment-title">海洋环境载荷特征</h3>
+      <div class="challenge-grid">
+        <div class="sea-grid">
+          <div class="photo typhoon"><span class="photo-label">台风</span></div>
+          <div class="photo wave"><span class="photo-label">巨浪</span></div>
+          <div class="photo current"><span class="photo-label">强流</span></div>
+          <div class="photo ice"><span class="photo-label">海冰</span></div>
+        </div>
+        <div class="load-chart">
+          <div class="chart-legend">━ 波浪　━ 风载　━ 流载　━ 潮汐</div>
+          <div class="chart-axis-y">载荷 (kN)</div>
+          <svg class="chart-svg" viewBox="0 0 220 124" aria-label="海洋环境载荷曲线">
+            <path class="gridline" d="M20 10H212M20 38H212M20 66H212M20 94H212"></path>
+            <path class="axis" d="M20 4V103H214"></path>
+            <polyline class="trace-blue" points="20,72 26,39 31,86 36,25 42,79 47,52 52,93 58,34 64,67 70,28 76,81 83,47 89,90 95,43 101,72 108,24 114,88 120,54 126,76 132,31 139,83 145,42 151,91 158,29 164,72 171,45 178,85 184,37 191,67 198,31 205,82 212,48"></polyline>
+            <polyline class="trace-red" points="20,54 26,78 32,26 38,72 44,46 51,82 57,34 63,63 69,20 75,70 82,39 88,86 94,48 101,61 107,30 114,77 120,38 126,82 133,42 140,68 146,26 152,74 159,45 166,79 172,34 179,64 185,24 192,76 198,42 205,67 212,29"></polyline>
+            <polyline class="trace-green" points="20,46 28,62 36,39 44,78 52,52 60,69 68,35 76,57 84,83 92,46 100,65 108,37 116,74 124,48 132,60 140,31 148,76 156,43 164,68 172,38 180,71 188,49 196,79 204,41 212,62"></polyline>
+            <text class="ticktext" x="16" y="116">0</text><text class="ticktext" x="63" y="116">600</text>
+            <text class="ticktext" x="108" y="116">1200</text><text class="ticktext" x="159" y="116">1800</text><text class="ticktext" x="198" y="116">2400</text>
+          </svg>
+          <div class="chart-axis-x">时间 (s)</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="section left-app">
+      <h3 class="section-title">前期工程应用验证</h3>
+      <div class="app-grid">
+        <div>
+          <div class="photo app-photo bridge"></div>
+          <div class="caption app-caption">浙江舟岱大桥南通航孔桥</div>
+          <div class="bullets">
+            <p>桥梁关键部位动力响应监测</p>
+            <p>长期稳定运行验证</p>
+          </div>
+        </div>
+        <div>
+          <div class="photo app-photo windfarm"></div>
+          <div class="caption app-caption">莆陇6号海上风电场</div>
+          <div class="bullets">
+            <p>风致振动位移监测</p>
+            <p>塔筒应变监测</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="section left-system">
+      <h3 class="section-title tight">前期监测系统与数据示例</h3>
+      <div class="wifi"></div>
+      <div class="pipeline">
+        <div class="pipe-item">
+          <div class="pipe-visual material"></div>
+          <div class="pipe-label">摩擦纳米超材料<br>传感器</div>
+        </div>
+        <div class="pipe-arrow"></div>
+        <div class="pipe-item">
+          <div class="pipe-visual chip"></div>
+          <div class="pipe-label">数据采集<br>（单片机）</div>
+        </div>
+        <div class="pipe-arrow"></div>
+        <div class="pipe-item">
+          <div class="pipe-visual wireless"></div>
+          <div class="pipe-label">无线传输<br>（4G/5G/北斗）</div>
+        </div>
+        <div class="pipe-arrow"></div>
+        <div class="pipe-item">
+          <div class="pipe-visual server"></div>
+          <div class="pipe-label">服务器<br>（云平台）</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="section left-charts">
+      <div class="spark-grid">
+        <div class="spark">
+          <div class="spark-title">桥梁振动响应</div>
+          <svg viewBox="0 0 160 69">
+            <path class="gridline" d="M0 17H160M0 34H160M0 51H160"></path>
+            <polyline class="trace-blue" points="0,39 4,29 8,46 12,20 16,51 20,33 24,42 28,24 32,48 36,31 40,38 44,21 48,51 52,28 56,45 60,34 64,52 68,23 72,42 76,30 80,47 84,20 88,51 92,35 96,43 100,26 104,49 108,31 112,39 116,23 120,52 124,28 128,46 132,33 136,50 140,24 144,41 148,29 152,48 160,36"></polyline>
+          </svg>
+          <div class="spark-axis">时间 (s)</div>
+        </div>
+        <div class="spark">
+          <div class="spark-title">风电塔筒应变</div>
+          <svg viewBox="0 0 160 69">
+            <polyline class="trace-red" points="0,36 3,20 6,49 9,23 12,55 15,30 18,45 21,17 24,51 27,29 30,44 33,20 36,52 39,31 42,46 45,18 48,54 51,25 54,48 57,22 60,50 63,28 66,43 69,16 72,52 75,30 78,47 81,20 84,55 87,29 90,45 93,18 96,50 99,27 102,48 105,22 108,53 111,30 114,43 117,17 120,51 123,26 126,49 129,21 132,54 135,28 138,45 141,19 144,52 147,31 150,46 153,23 156,49 160,35"></polyline>
+          </svg>
+          <div class="spark-axis">时间 (s)</div>
+        </div>
+        <div class="spark">
+          <div class="spark-title">长期监测稳定性</div>
+          <svg viewBox="0 0 160 69">
+            <polyline class="trace-blue" points="0,22 8,23 16,22 24,24 32,22 40,23 48,22 56,23 64,22 72,24 80,23 88,22 96,23 104,22 112,23 120,22 128,24 136,23 144,22 152,23 160,22"></polyline>
+          </svg>
+          <div class="spark-axis">时间 (day)</div>
+        </div>
+      </div>
+    </article>
+
+    <div class="bullets left-notes">
+      <p>我国极端海洋灾害频发，海洋工程长期服役监测需求迫切</p>
+      <p>前期工程应用验证了复杂海洋环境下监测的可行性与必要性</p>
+      <p>进一步亟需提升监测精度、耐久性和多功能一体化自能量监测能力</p>
+    </div>
+  </section>
+
+  <section class="column col-mid">
+    <h2 class="column-heading">基于前期研究基础的理论体系支撑</h2>
+    <p class="column-subtitle">已有研究成果为本项目科学问题的深入研究提供坚实基础</p>
+
+    <article class="section mid-foundation1">
+      <h3 class="section-title">前期基础一：摩擦纳米超材料传感器件（力电响应机理）</h3>
+      <div class="material-grid">
+        <div><div class="photo material-shot lattice-a"></div><div class="mid-cap">折纸超材料</div></div>
+        <div><div class="photo material-shot lattice-b"></div><div class="mid-cap">点阵超材料</div></div>
+        <div><div class="photo material-shot lattice-c"></div><div class="mid-cap">胶囊结构器件</div></div>
+        <div class="small-chart">
+          <div class="small-chart-title">多稳态力电响应</div>
+          <svg viewBox="0 0 178 86">
+            <path class="axis" d="M13 4V72H175"></path>
+            <path class="trace-green" d="M14 33L31 34L31 50L49 51L49 34L67 35L67 52L85 53L85 33L104 34L104 51L123 52L123 34L143 35L143 52L160 53L160 34L175 36"></path>
+            <path class="trace-purple" d="M14 37L31 38L31 55L49 55L49 38L67 39L67 57L85 57L85 37L104 38L104 56L123 56L123 38L143 39L143 57L160 57L160 38L175 40"></path>
+            <path class="trace-red" d="M14 42L31 43L31 61L49 61L49 43L67 44L67 63L85 63L85 42L104 43L104 62L123 62L123 43L143 44L143 63L160 63L160 43L175 45"></path>
+          </svg>
+          <span class="ylab">电压 (V)</span><span class="xlab">时间 (s)</span>
+        </div>
+      </div>
+      <div class="mini-bullets material-copy">
+        <p>揭示不同荷载条件下摩擦纳米超材料的力电机理</p>
+        <p>阐明微电能元对力电性能的调控方法</p>
+      </div>
+    </article>
+
+    <article class="section mid-foundation2">
+      <h3 class="section-title">前期基础二：能量采集转化器件（机械能-电能转化）</h3>
+      <div class="energy-grid">
+        <div><div class="photo energy-shot layered"></div><div class="mid-cap">板状超材料</div></div>
+        <div><div class="photo energy-shot block"></div><div class="mid-cap">双侧约束滑块</div></div>
+        <div><div class="photo energy-shot ring"></div><div class="mid-cap">陀螺结构</div></div>
+        <div class="small-chart">
+          <div class="small-chart-title">低频激励能量采集</div>
+          <svg viewBox="0 0 178 86">
+            <path class="axis" d="M13 4V72H175"></path>
+            <polyline class="trace-blue" points="14,69 29,66 45,59 61,50 77,40 93,32 108,27 123,29 139,36 154,44 174,50"></polyline>
+            <polyline class="trace-red" points="14,70 29,68 45,63 61,53 77,38 93,24 108,14 123,15 139,25 154,35 174,40"></polyline>
+          </svg>
+          <span class="ylab">输出功率 (mW)</span><span class="xlab">频率 (Hz)</span>
+        </div>
+      </div>
+      <div class="mini-bullets energy-copy">
+        <p>提出超低频荷载激励的高效能量采集方法</p>
+        <p>建立力学-压电-摩擦电耦合的能量转化理论模型</p>
+      </div>
+    </article>
+
+    <article class="section mid-methods">
+      <h3 class="section-title">前期基础三：理论方法与设计优化</h3>
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-label">Equivalent Current Model</div>
+          <div class="circuit"></div>
+        </div>
+        <div class="method-card">
+          <div class="method-label">多物理场数值模拟</div>
+          <div class="simulation"></div>
+        </div>
+        <div class="method-card">
+          <div class="method-label">AI逆向设计优化</div>
+          <div class="network">
+            <i class="node n1"></i><i class="node n2"></i><i class="node n3"></i>
+            <i class="node n4"></i><i class="node n5"></i><i class="node n6"></i>
+            <i class="node n7"></i><i class="node n8"></i>
+            <i class="link l1"></i><i class="link l2"></i><i class="link l3"></i>
+            <i class="link l4"></i><i class="link l5"></i><i class="link l6"></i>
+          </div>
+        </div>
+      </div>
+      <div class="mini-bullets export-inline-style-1"></div>
+    </article>
+
+    <article class="section mid-results">
+      <h3 class="section-title tight">代表性研究成果（部分）</h3>
+      <div class="journal-row">
+        <div class="journal">Nano Energy</div><div class="journal-text">Nano Energy<br>IF 16.7<br>JCR Q1</div>
+        <div class="journal alt">ADVANCED<br>SCIENCE</div><div class="journal-text">Advanced<br>Science<br>IF 14.1<br>JCR Q1</div>
+        <div class="journal alt">ADVANCED<br>MATERIALS</div><div class="journal-text">Advanced<br>Materials<br>IF 29.1<br>JCR Q1</div>
+        <div class="journal red">Progress in<br>Materials</div><div class="journal-text">Progress in<br>Materials Science<br>IF 42.9<br>JCR Q1</div>
+        <div class="ellipsis">…</div>
+      </div>
+    </article>
+
+    <div class="bullets mid-notes">
+      <p>已形成系统的摩擦纳米超材料力电响应与能量采集理论研究基础</p>
+      <p>在国际高水平期刊发表系列成果，为本项目理论深化提供有力支撑</p>
+    </div>
+  </section>
+
+  <section class="column col-right">
+    <h2 class="column-heading">基于前期技术积累的可行性验证</h2>
+    <p class="column-subtitle">已有制备、测试与系统集成基础为本项目提供保障</p>
+
+    <article class="section right-fabrication">
+      <h3 class="section-title">前期器件制备与多尺度表征</h3>
+      <div class="fabrication-grid">
+        <div><div class="photo machine"></div><div class="caption">3D打印制备</div></div>
+        <div><div class="photo micro-a"><span class="micro-note">2 cm</span></div><div class="caption">微观结构</div></div>
+        <div><div class="photo micro-b"><span class="micro-note">100 μm</span></div><div class="caption">微观形貌 (SEM)</div></div>
+        <div><div class="photo eds"><span class="micro-note">50 μm</span></div><div class="caption">元素分布 (EDS)</div></div>
+        <div><div class="photo afm"><span class="micro-note">2 μm</span></div><div class="caption">表面形貌 (AFM)</div></div>
+      </div>
+    </article>
+
+    <article class="section right-testing">
+      <h3 class="section-title">前期性能测试与多场耦合表征</h3>
+      <div class="test-grid">
+        <div class="test-card">
+          <div class="test-label">力学加载平台</div>
+          <div class="load-machine"></div>
+        </div>
+        <div class="test-card">
+          <div class="test-label">多通道同步采集</div>
+          <div class="signal-grid">
+            <div class="signal"><span>力信号</span><svg viewBox="0 0 80 45"><polyline class="trace-red" points="0,26 5,15 10,34 15,7 20,37 25,13 30,31 35,10 40,38 45,14 50,29 55,8 60,36 65,12 70,32 75,16 80,25"></polyline></svg></div>
+            <div class="signal"><span>位移信号</span><svg viewBox="0 0 80 45"><polyline class="trace-green" points="0,25 6,15 12,36 18,9 24,32 30,12 36,37 42,14 48,30 54,10 60,34 66,13 72,30 80,20"></polyline></svg></div>
+            <div class="signal"><span>电压信号</span><svg viewBox="0 0 80 45"><polyline class="trace-purple" points="0,30 7,12 14,34 21,18 28,38 35,10 42,31 49,14 56,37 63,17 70,32 80,23"></polyline></svg></div>
+            <div class="signal"><span>电荷信号</span><svg viewBox="0 0 80 45"><polyline points="0,31 8,12 16,35 24,16 32,38 40,9 48,33 56,18 64,36 72,14 80,29" fill="none" stroke="#f4a000" stroke-width="2"></polyline></svg></div>
+          </div>
+        </div>
+        <div class="test-card">
+          <div class="test-label">环境适应性测试</div>
+          <div class="chamber"></div>
+          <div class="chamber-copy">温度循环<br>（-20~70°C）<br>盐雾腐蚀<br>长期疲劳</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="section right-system">
+      <h3 class="section-title">前期系统集成与工程应用</h3>
+      <div class="system-flow">
+        <div class="system-item"><div class="system-visual sensor"></div><div class="system-label">传感器部件</div></div>
+        <div class="system-arrow"></div>
+        <div class="system-item"><div class="system-visual collector"></div><div class="system-label">信号采集</div></div>
+        <div class="system-arrow"></div>
+        <div class="system-item"><div class="system-visual router"></div><div class="system-label">无线通信</div></div>
+        <div class="system-arrow"></div>
+        <div class="system-item"><div class="system-visual platform"></div><div class="system-label">数据平台</div></div>
+        <div class="system-arrow"></div>
+        <div class="system-item"><div class="system-visual rig"></div><div class="system-label">工程示范</div></div>
+      </div>
+    </article>
+
+    <article class="section right-expansion">
+      <h3 class="section-title">技术基础向本项目的拓展</h3>
+      <div class="expansion-grid">
+        <div class="exp-box">
+          <div class="exp-head">已有增材制造基础</div>
+          <div class="exp-list">
+            <p>3D打印技术</p><p>多尺度结构制备</p><p>器件测试与系统集成</p>
+          </div>
+        </div>
+        <div class="big-arrow"></div>
+        <div class="exp-box">
+          <div class="exp-head">本项目进一步发展</div>
+          <div class="exp-list">
+            <p>多尺度搅拌摩擦固相制造</p><p>高精度与耐久性器件制备</p><p>面向复杂海洋环境的工程应用</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="bullets right-notes">
+      <p>已具备器件制备、性能测试、系统集成与海洋工程应用的完整技术基础</p>
+      <p>为本项目多尺度搅拌摩擦固相制造及器件性能验证提供可靠的实验条件</p>
+      <p>具备将基础研究向工程应用转化的技术能力和实践经验</p>
+    </div>
+  </section>
+</main>
+</div>
+</div>
+
+<script src="./script.js"></script></body></html>

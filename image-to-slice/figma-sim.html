@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Figma Plugin Simulator</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #eef0f4;
+        color: #23262f;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .sim {
+        display: grid;
+        grid-template-columns: var(--plugin-width, 980px) minmax(320px, 1fr);
+        gap: 20px;
+        align-items: start;
+        padding: 24px;
+      }
+
+      .plugin-window,
+      .canvas-panel {
+        overflow: hidden;
+        border: 1px solid #d8dbe3;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 20px 44px rgba(30, 35, 55, 0.14);
+      }
+
+      .plugin-window {
+        width: 980px;
+        height: 700px;
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      .canvas-panel {
+        min-height: 700px;
+        padding: 16px;
+      }
+
+      .canvas-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.3;
+      }
+
+      .status {
+        color: #777d8a;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .canvas-stage {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: 620px;
+        overflow: hidden;
+        border: 1px dashed #c9ccd6;
+        border-radius: 8px;
+        background: #f7f8fb;
+      }
+
+      .empty {
+        max-width: 260px;
+        color: #8a8f9c;
+        font-size: 13px;
+        line-height: 1.55;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sim">
+      <section class="plugin-window" aria-label="插件窗口">
+        <iframe src="./dist/ui.html" title="Image To Slice plugin"></iframe>
+      </section>
+
+      <aside class="canvas-panel" aria-label="模拟 Figma 画布">
+        <div class="canvas-head">
+          <h1>模拟 Figma 画布</h1>
+          <div id="status" class="status">等待插件消息</div>
+        </div>
+        <div id="stage" class="canvas-stage">
+          <div class="empty">点击插件里的“生成图片”，再点“放入 Figma”，这里会显示 mock 的画布回填效果。</div>
+        </div>
+      </aside>
+    </main>
+
+    <script src="./dist/figma-sim.js"></script>
+  </body>
+</html>

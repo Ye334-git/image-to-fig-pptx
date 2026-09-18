@@ -1,0 +1,17 @@
+{
+  "output": "../../deliverables/example-html-deck.pptx",
+  "selector": ".screen",
+  "aspect": "html",
+  "render": true,
+  "slides": [
+    {
+      "html": "../../htmls/1.png-html/index.html"
+    },
+    {
+      "html": "../../htmls/2.png-html (1)/index.html"
+    },
+    {
+      "html": "../../htmls/3.png-html (1)/index.html"
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+
+<title>MM-GPENG结构与压电效应示意图</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./styles.css"></head>
+<body>
+<div class="fit-shell">
+  <div class="fit-box">
+    <main class="screen">
+      <section class="left-panel">
+        <div class="figure-a">(a)</div>
+
+        <div class="equation">
+          J<span class="sub">D</span> = ε
+          <span class="fraction">
+            <span class="num">∂E</span>
+            <span class="bar"></span>
+            <span class="den">∂t</span>
+          </span>
+          +
+          <span class="boxed-term">
+            <span class="fraction">
+              <span class="num">∂P<span class="sub">s</span></span>
+              <span class="bar"></span>
+              <span class="den">∂t</span>
+            </span>
+          </span>
+        </div>
+
+        <h1 class="piezo-title">压电效应</h1>
+        <div class="material-label">压电材料</div>
+
+        <div class="piezo-unit one">
+          <img class="asset-img" src="./assets/piezoelectric_beam_polarization_diagram.png" alt="压电梁极化示意">
+          <div class="left-bracket"></div>
+          <div class="piezo-block">
+            <div class="top-surface"></div>
+            <div class="block-face"></div>
+            <div class="block-body"></div>
+            <i class="pole p1"></i><i class="pole p2"></i><i class="pole p3"></i><i class="pole p4"></i>
+            <i class="electron e2"></i>
+          </div>
+        </div>
+
+        <div class="piezo-unit two">
+          <img class="asset-img" src="./assets/piezoelectric_beam_initial_state.png" alt="压电梁初始状态">
+          <div class="left-bracket"></div>
+          <div class="piezo-block">
+            <div class="top-surface"></div>
+            <div class="block-face"></div>
+            <div class="block-body"></div>
+            <i class="pole p1"></i><i class="pole p2"></i><i class="pole p3"></i><i class="pole p4"></i>
+            <i class="electron e1"></i><i class="electron e2"></i>
+          </div>
+          <i class="force-down fd1"></i>
+          <div class="charge-arrow right-charge"></div>
+        </div>
+
+        <div class="piezo-unit three">
+          <img class="asset-img" src="./assets/piezoelectric_beam_maximum_deformation.png" alt="压电梁最大变形状态">
+          <div class="left-bracket"></div>
+          <div class="piezo-block">
+            <div class="top-surface"></div>
+            <div class="block-face"></div>
+            <div class="block-body"></div>
+            <i class="pole p1"></i><i class="pole p2"></i><i class="pole p3"></i><i class="pole p4"></i>
+            <i class="electron e1"></i><i class="electron e2"></i><i class="electron e3"></i><i class="electron e4"></i>
+          </div>
+          <i class="force-down fd1"></i>
+          <i class="force-down fd2"></i>
+        </div>
+
+        <div class="piezo-unit four">
+          <img class="asset-img" src="./assets/piezoelectric_beam_release_state.png" alt="压电梁释放状态">
+          <div class="left-bracket"></div>
+          <div class="piezo-block">
+            <div class="top-surface"></div>
+            <div class="block-face"></div>
+            <div class="block-body"></div>
+            <i class="pole p1"></i><i class="pole p2"></i><i class="pole p3"></i><i class="pole p4"></i>
+            <i class="electron e2"></i>
+          </div>
+          <i class="force-up fu1"></i>
+          <div class="charge-arrow right-charge"></div>
+        </div>
+
+        <div class="state-label state-one">初始状态</div>
+        <div class="state-label state-two">变形中<br>最大变形</div>
+        <div class="state-label state-three">释放</div>
+      </section>
+
+      <section class="main-panel">
+        <div class="figure-b">(b)</div>
+        <h1 class="main-title">MM-GPENG结构示意</h1>
+        <div class="vertical-tag">压电材料</div>
+
+        <div class="cell large-top">
+          <img class="asset-img" src="./assets/mm_gpeng_cell_dimension_diagram.png" alt="MM-GPENG胞元结构">
+          <div class="cell-ring-outer"></div>
+          <div class="cell-ring-mid"></div>
+          <div class="cell-ring-inner"></div>
+          <div class="cell-orbit"></div>
+          <div class="cell-orbit second"></div>
+          <div class="cell-arm"></div>
+          <div class="cell-core"></div>
+          <div class="cell-cap"></div>
+          <div class="cell-foot"></div>
+        </div>
+
+        <div class="plate single"><img class="asset-img" src="./assets/piezoelectric_layer_sheet.png" alt="压电层薄片"></div>
+        <div class="dimension-l">L</div>
+        <div class="dimension-b">b</div>
+
+        <svg width="340" height="540" viewBox="0 0 340 540" aria-hidden="true" class="export-inline-style-1">
+          <defs>
+            <marker id="arrowA" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#06122f"></path>
+            </marker>
+          </defs>
+          <path d="M46 62 L46 486" stroke="#06122f" stroke-width="4" marker-start="url(#arrowA)" marker-end="url(#arrowA)"></path>
+          <path d="M73 506 L286 472" stroke="#06122f" stroke-width="4" marker-start="url(#arrowA)" marker-end="url(#arrowA)"></path>
+        </svg>
+
+        <div class="plus-sign">+</div>
+
+        <div class="membrane-title">MM胞元结构</div>
+        <div class="plate front">
+          <img class="asset-img" src="./assets/mm_cell_front_particle_layer.png" alt="前层胞元结构">
+          <div class="particle-field"></div>
+          <div class="plate-label">Front</div>
+        </div>
+        <div class="plate back">
+          <img class="asset-img" src="./assets/mm_cell_back_particle_layer.png" alt="后层胞元结构">
+          <div class="particle-field"></div>
+          <div class="plate-label">Back</div>
+        </div>
+
+        <svg width="865" height="610" viewBox="0 0 865 610" aria-hidden="true" class="export-inline-style-2">
+          <defs>
+            <marker id="arrowB" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#06122f"></path>
+            </marker>
+          </defs>
+          <path d="M40 82 L40 515" stroke="#06122f" stroke-width="4" marker-start="url(#arrowB)" marker-end="url(#arrowB)"></path>
+          <path d="M496 10 L608 0 L612 112" fill="none" stroke="#06122f" stroke-width="5" stroke-dasharray="13 8"></path>
+          <path d="M608 112 L830 375" fill="none" stroke="#06122f" stroke-width="5" stroke-dasharray="13 8"></path>
+          <path d="M505 25 L512 521" fill="none" stroke="#06122f" stroke-width="5" stroke-dasharray="13 8"></path>
+          <path d="M610 143 L610 446" stroke="#06122f" stroke-width="4" marker-start="url(#arrowB)" marker-end="url(#arrowB)"></path>
+        </svg>
+
+        <div class="pressure-label">压电层</div>
+        <div class="front-label">前面</div>
+        <div class="dimension-m">M</div>
+        <div class="dimension-h">h</div>
+
+        <section class="analysis-box">
+          <div class="analysis-divider"></div>
+          <h2 class="section-heading helix-heading">陀螺结构<br>滑动约束</h2>
+          <h2 class="section-heading constraint-heading">陀螺结构</h2>
+          <div class="constraint-en">constraints</div>
+
+          <div class="layer-view outer">
+            <img class="asset-img" src="./assets/mm_cell_outer_shell_component.png" alt="胞元外层">
+            <div class="layer-sphere"></div>
+            <div class="layer-seam"></div>
+            <div class="layer-name">Outer</div>
+          </div>
+
+          <div class="layer-view middle">
+            <img class="asset-img" src="./assets/mm_cell_middle_shell_component.png" alt="胞元中层">
+            <div class="layer-sphere"></div>
+            <div class="layer-seam"></div>
+            <div class="layer-name">Middle</div>
+          </div>
+
+          <div class="layer-view inner">
+            <img class="asset-img" src="./assets/mm_cell_inner_core_component.png" alt="胞元内层">
+            <div class="layer-sphere"></div>
+            <div class="layer-seam"></div>
+            <div class="layer-name">Inner</div>
+          </div>
+
+          <div class="mm-label">MM层</div>
+          <div class="height-label">高度 →</div>
+          <div class="joint-label">Joints</div>
+
+          <div class="constraint-notes">
+            内圈 →<br>
+            滑动单元<br>
+            中心重力
+          </div>
+          <div class="gravity-en">Center of<br>gravity</div>
+
+          <div class="cross-device">
+            <img class="asset-img" src="./assets/slice_01.png" alt="胞元滑动约束组件">
+            <div class="cross-horizontal"></div>
+            <div class="cross-vertical"></div>
+            <div class="cross-mask"></div>
+            <div class="cross-base"></div>
+            <div class="cross-letter">g</div>
+          </div>
+        </section>
+
+        <div class="cell large-right">
+          <img class="asset-img" src="./assets/mm_gpeng_cell_cross_section.png" alt="MM-GPENG胞元剖面">
+          <div class="cell-ring-outer"></div>
+          <div class="cell-ring-mid"></div>
+          <div class="cell-ring-inner"></div>
+          <div class="cell-orbit"></div>
+          <div class="cell-orbit second"></div>
+          <div class="cell-arm"></div>
+          <div class="cell-core"></div>
+          <div class="cell-cap"></div>
+          <div class="cell-foot"></div>
+        </div>
+
+        <svg width="660" height="650" viewBox="0 0 660 650" aria-hidden="true" class="export-inline-style-3">
+          <defs>
+            <marker id="arrowC" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#06122f"></path>
+            </marker>
+          </defs>
+          <path d="M590 58 L590 458" stroke="#06122f" stroke-width="4" marker-start="url(#arrowC)" marker-end="url(#arrowC)"></path>
+          <path d="M160 516 L536 516" stroke="#06122f" stroke-width="4" marker-start="url(#arrowC)" marker-end="url(#arrowC)"></path>
+          <path d="M108 26 L0 88" stroke="#06122f" stroke-width="4" marker-end="url(#arrowC)"></path>
+        </svg>
+
+        <div class="right-diameter">宽径</div>
+        <div class="callout">微电胞元调控动力响应，<br>胞元信号叠加产生宏观力电输出</div>
+        <div class="watermark">四川大学</div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script src="./script.js"></script></body></html>

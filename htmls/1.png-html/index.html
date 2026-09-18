@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+  
+  <title>3.1 项目创新性</title>
+  
+<meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./styles.css"></head>
+<body>
+  <div class="fit-shell">
+    <div class="fit-box">
+      <main class="screen export-inline-style-1" aria-label="项目创新性展示页">
+        <h1 class="slide-title">3.1 项目创新性</h1>
+        <div class="title-rule-dark"></div>
+        <div class="title-rule-light"></div>
+
+        <nav class="phase-ribbon" aria-label="项目创新阶段">
+          <div class="phase">基础理论</div>
+          <div class="phase">科学技术</div>
+          <div class="phase">转化应用</div>
+        </nav>
+
+        <section class="column theory-column" aria-labelledby="theory-heading">
+          <h2 class="section-strip" id="theory-heading">力电响应机理</h2>
+          <p class="section-intro">构建摩擦纳米超材料传感器监测性能<br>与电能采集转化理论体系</p>
+
+          <div class="visual-panel">
+            <div class="subhead theory-design">微电胞元结构设计</div>
+            <div class="subhead theory-response">结构动态响应与接触分离过程</div>
+
+            <img class="micro-lattice-sensor-structure export-reference-asset-1" src="./assets/micro_lattice_sensor_structure.png" alt="micro_lattice_sensor_structure">
+
+            <img class="layered-friction-sensor-material export-reference-asset-2" src="./assets/layered_friction_sensor_material.png" alt="layered_friction_sensor_material">
+
+            <img class="beam-contact-response-states export-reference-asset-3" src="./assets/beam_contact_response_states.png" alt="beam_contact_response_states">
+
+            <span class="material-label friction-label">摩擦电材料</span>
+            <span class="material-label substrate-label">基底材料</span>
+            <span class="material-label state-label">原始状态</span>
+            <span class="material-label state-label deformed">变形状态</span>
+            <span class="red-leader leader-one"></span>
+            <span class="red-leader leader-two"></span>
+            <span class="response-arrow first"></span>
+            <span class="response-arrow second"></span>
+
+            <div class="theory-banner">理论模型建立（Modified Couple Stress Theory + Euler-Bernoulli Beam Theory）</div>
+
+            <article class="formula-card one">
+              <h3 class="formula-title">结构动力学模型<br>（式(5)）</h3>
+              <p class="formula">EI<sub>eff</sub> ∂⁴w/∂x⁴ + ρA<sub>eff</sub> ∂²w/∂t² = F(t)</p>
+            </article>
+
+            <article class="formula-card two">
+              <h3 class="formula-title">局域力电耦合模型<br>（式(6)）</h3>
+              <p class="formula compact">V̇ = R dQ/dt<br>Q = f(x(t), S, σ, ε)</p>
+            </article>
+
+            <article class="formula-card three">
+              <h3 class="formula-title">宏观叠加模型<br>（式(7)）</h3>
+              <p class="formula compact">V<sub>total</sub> = ∑ V<sub>i</sub><br>Q<sub>total</sub> = ∑ Q<sub>i</sub></p>
+            </article>
+
+            <span class="flow-arrow first"></span>
+            <span class="flow-arrow second"></span>
+
+            <div class="chart-caption voltage">载荷-电压响应（实验与理论对比）</div>
+            <div class="chart-caption charge">能量采集性能</div>
+
+            <img class="voltage-load-response-chart export-reference-asset-4" src="./assets/voltage_load_response_chart.png" alt="voltage_load_response_chart">
+
+            <img class="stored-charge-performance-chart export-reference-asset-5" src="./assets/stored_charge_performance_chart.png" alt="stored_charge_performance_chart">
+
+            <span class="axis-label voltage-axis">电压 (V)</span>
+            <span class="axis-label charge-axis">存储电荷 (μC)</span>
+            <span class="axis-label time-axis">时间 (s)</span>
+            <span class="axis-label time-axis second">时间 (s)</span>
+          </div>
+
+          <div class="column-notes">
+            <p class="note-line">揭示微电胞元结构参数与宏观力电响应之间的耦合机制</p>
+            <p class="note-line">建立结构调控—信号输出—能量转换的定量关系</p>
+            <p class="note-line">实现传感性能与采能能力的理论优化</p>
+          </div>
+        </section>
+
+        <section class="column technology-column" aria-labelledby="technology-heading">
+          <h2 class="section-strip" id="technology-heading">固相制造工艺</h2>
+          <p class="section-intro">形成摩擦纳米超材料多尺度搅拌摩擦<br>固相制造工艺方法</p>
+
+          <div class="manufacturing-panel">
+            <img class="stirring-head-manufacturing-simulation export-reference-asset-6" src="./assets/stirring_head_manufacturing_simulation.png" alt="stirring_head_manufacturing_simulation">
+
+            <img class="manufacturing-temperature-field export-reference-asset-7" src="./assets/manufacturing_temperature_field.png" alt="manufacturing_temperature_field">
+
+            <img class="material-flow-vector-field export-reference-asset-8" src="./assets/material_flow_vector_field.png" alt="material_flow_vector_field">
+
+            <span class="manufacturing-label stir-label">搅拌头</span>
+            <span class="manufacturing-label temp-label">温度场 (°C)</span>
+            <span class="manufacturing-label flow-label">材料流动场</span>
+
+            <div class="hierarchy-wedge"></div>
+            <h3 class="hierarchy-title">多尺度分级固相制造</h3>
+
+            <article class="scale-card micro">
+              <h3 class="scale-title">微观尺度<br>（微电胞元）</h3>
+            <img class="micro-unit-microscope-image export-reference-asset-9" src="./assets/micro_unit_microscope_image.png" alt="micro_unit_microscope_image"></article>
+            <article class="scale-card meso">
+              <h3 class="scale-title">介观尺度<br>（胞元阵列）</h3>
+            <img class="mesoscale-lattice-microscope-image export-reference-asset-10" src="./assets/mesoscale_lattice_microscope_image.png" alt="mesoscale_lattice_microscope_image"></article>
+            <article class="scale-card macro">
+              <h3 class="scale-title">宏观尺度<br>（器件构件）</h3>
+            <img class="macroscale-sensor-array-photo export-reference-asset-11" src="./assets/macroscale_sensor_array_photo.png" alt="macroscale_sensor_array_photo"></article>
+
+            
+
+            
+
+            
+
+            <p class="scale-description micro">微型定点搅拌摩擦化<br>形成标准化微电胞元</p>
+            <p class="scale-description meso">分段式搅拌摩擦搭接<br>实现胞元阵列拼接</p>
+            <p class="scale-description macro">整体闭环搅拌摩擦成型<br>完成大尺寸器件加工</p>
+
+            <h3 class="process-title">工艺参数优化</h3>
+            <div class="process-row">
+              <div class="process-chip">转速</div>
+              <div class="process-chip">下压力</div>
+              <div class="process-chip">行进速度</div>
+              <div class="process-chip">填料掺量</div>
+            </div>
+            <div class="down-process-arrow"></div>
+            <div class="result-row">
+              <div class="result-chip">成型质量</div>
+              <span class="small-flow"></span>
+              <div class="result-chip">界面结合</div>
+              <span class="small-flow"></span>
+              <div class="result-chip green">组织结构</div>
+              <span class="small-flow"></span>
+              <div class="result-chip green">力电性能</div>
+            </div>
+          </div>
+
+          <div class="column-notes">
+            <p class="note-line">突破传统器件组装制造模式，建立结构尺度调控与固相成型协同制造技术</p>
+            <p class="note-line">实现微电胞元结构精准控制与传感器高性能一体化制造</p>
+          </div>
+        </section>
+
+        <section class="column application-column" aria-labelledby="application-heading">
+          <h2 class="section-strip" id="application-heading">传感监测系统</h2>
+          <p class="section-intro">研发海洋工程监测感知自能量摩擦纳<br>米超材料传感系统</p>
+
+          <div class="application-scene">
+            <img class="offshore-wind-turbine-sensor-scene export-reference-asset-16" src="./assets/offshore_wind_turbine_sensor_scene_ai_original.png" alt="offshore_wind_turbine_sensor_scene_ai_original">
+
+            <div class="sensor-inset"></div>
+            <img class="friction-nanocomposite-sensor-closeup export-reference-asset-12" src="./assets/friction_nanocomposite_sensor_closeup.png" alt="friction_nanocomposite_sensor_closeup">
+            <div class="sensor-inset-title">摩擦纳米超材料传感器</div>
+
+            <div class="excitation-box">风、浪、流、潮<br>低频机械激励</div>
+            <span class="vertical-blue-arrow arrow-a"></span>
+            <div class="response-box">海洋工程结构<br>动力响应</div>
+            <span class="vertical-blue-arrow arrow-b"></span>
+            <div class="sensor-box">触发摩擦纳米<br>超材料传感器</div>
+
+            <div class="monitor-panel"></div>
+            <div class="output-title">输出电信号</div>
+            <div class="wave-label vibration">振动监测</div>
+            <img class="vibration-monitoring-waveform export-reference-asset-13" src="./assets/vibration_monitoring_waveform.png" alt="vibration_monitoring_waveform">
+
+            <div class="wave-label strain">应变监测</div>
+            <img class="strain-monitoring-waveform export-reference-asset-14" src="./assets/strain_monitoring_waveform.png" alt="strain_monitoring_waveform">
+
+            <div class="wave-label displacement">位移监测</div>
+            <img class="displacement-monitoring-waveform export-reference-asset-15" src="./assets/displacement_monitoring_waveform.png" alt="displacement_monitoring_waveform">
+
+            <div class="monitor-dots">·<br>·<br>·</div>
+            <span class="red-callout callout-a"></span>
+            <span class="red-callout callout-b"></span>
+            <span class="red-callout callout-c"></span>
+            <span class="sensor-marker marker-one"></span>
+            <span class="sensor-marker marker-two"></span>
+            <span class="sensor-marker marker-three"></span>
+            <div class="scene-caption">海上风电工程</div>
+          </div>
+
+          <div class="column-notes">
+            <p class="note-line">攻克传统传感器在深远海风电场的性能和应用局限</p>
+            <p class="note-line">实现海洋工程多部位、不同工况的结构动力响应自能量监测</p>
+            <p class="note-line">为海洋工程防灾减灾提供关键技术支撑</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+<script src="./script.js"></script></body></html>

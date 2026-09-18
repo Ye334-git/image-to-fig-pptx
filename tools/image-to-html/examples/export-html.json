@@ -1,0 +1,21 @@
+{
+  "screen": {
+    "name": "example-screen",
+    "width": 1280,
+    "height": 720
+  },
+  "files": [
+    {
+      "name": "index.html",
+      "text": "<!doctype html><html><head><link rel=\"stylesheet\" href=\"./styles.css\"></head><body><main class=\"screen\">Example</main><script src=\"./script.js\"></script></body></html>"
+    },
+    {
+      "name": "styles.css",
+      "text": ".screen{width:1280px;height:720px}"
+    },
+    {
+      "name": "script.js",
+      "text": ""
+    }
+  ]
+}

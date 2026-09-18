@@ -1,0 +1,692 @@
+html,body{margin:0;padding:0;background:#eef0f4;}body{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"PingFang SC","Microsoft YaHei",sans-serif;}*{box-sizing:border-box;}.screen{width:3040px!important;min-width:3040px!important;height:1472px!important;min-height:1472px!important;max-width:none;overflow:hidden;position:relative;flex:0 0 auto!important;padding:0!important;border:0!important;transform:none!important;}img{display:block;}.screen [data-reference-asset]{position:absolute!important;object-fit:contain!important;object-position:center!important;background:transparent!important;}
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 100%;
+      min-height: 100%;
+      background: #d8d8d8;
+    }
+
+    body {
+      font-family: Arial, "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    button {
+      margin: 0;
+    }
+
+    .fit-shell {
+      width: 100%;
+      min-height: 100vh;
+      overflow: auto;
+    }
+
+    .fit-box {
+      position: relative;
+      width: 3040px;
+      height: 1472px;
+      margin: 0 auto;
+    }
+
+    .screen {
+      position: relative;
+      width: 3040px;
+      height: 1472px;
+      overflow: hidden;
+      color: #000d27;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #ffffff 24%, #fbffff 68%, #ffffff 100%);
+    }
+
+    .diagram-label {
+      position: absolute;
+      white-space: nowrap;
+      letter-spacing: 0;
+      line-height: 1;
+      z-index: 4;
+    }
+
+    .serif {
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .reference-art {
+      position: absolute;
+      display: block;
+      object-fit: fill;
+      z-index: 2;
+    }
+
+    /* Left: piezoelectric effect */
+    .piezo-panel {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1000px;
+      height: 1424px;
+    }
+
+    .panel-letter-a {
+      left: 19px;
+      top: 2px;
+      width: 113px;
+      height: 84px;
+      font: 76px/1 "Times New Roman", Times, serif;
+    }
+
+    .constitutive-equation {
+      position: absolute;
+      left: 164px;
+      top: 20px;
+      width: 700px;
+      height: 192px;
+      font-family: "Times New Roman", Times, serif;
+      font-style: italic;
+      color: #000b22;
+      z-index: 4;
+    }
+
+    .equation-j {
+      position: absolute;
+      left: 0;
+      top: 65px;
+      font-size: 76px;
+      line-height: 1;
+    }
+
+    .equation-epsilon {
+      position: absolute;
+      left: 166px;
+      top: 66px;
+      font-size: 76px;
+      line-height: 1;
+    }
+
+    .equation-plus {
+      position: absolute;
+      left: 380px;
+      top: 72px;
+      font-size: 76px;
+      line-height: 1;
+      font-style: normal;
+    }
+
+    .fraction {
+      position: absolute;
+      text-align: center;
+      font-size: 67px;
+      line-height: .95;
+    }
+
+    .fraction::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 72px;
+      height: 4px;
+      background: #000b22;
+    }
+
+    .fraction-e {
+      left: 253px;
+      top: 0;
+      width: 128px;
+      height: 168px;
+    }
+
+    .fraction-e::after {
+      width: 100px;
+      left: 13px;
+    }
+
+    .fraction-p {
+      left: 476px;
+      top: 0;
+      width: 205px;
+      height: 198px;
+      border: 5px solid #000b22;
+      font-size: 67px;
+      padding-top: 3px;
+    }
+
+    .fraction-p::after {
+      left: 36px;
+      width: 132px;
+    }
+
+    .fraction-denominator {
+      display: block;
+      margin-top: 17px;
+    }
+
+    .subscript {
+      font-size: .52em;
+      vertical-align: -.3em;
+    }
+
+    .piezo-title {
+      left: 82px;
+      top: 253px;
+      width: 290px;
+      height: 72px;
+      font-size: 65px;
+      font-weight: 700;
+    }
+
+    .piezo-material-label {
+      left: 66px;
+      top: 457px;
+      width: 270px;
+      height: 64px;
+      font-size: 54px;
+      font-weight: 400;
+    }
+
+    .initial-label {
+      left: 685px;
+      top: 695px;
+      width: 270px;
+      height: 65px;
+      font-size: 55px;
+    }
+
+    .deforming-label {
+      left: 126px;
+      top: 963px;
+      width: 235px;
+      height: 65px;
+      font-size: 52px;
+    }
+
+    .maximum-label {
+      left: 88px;
+      top: 1056px;
+      width: 260px;
+      height: 64px;
+      font-size: 54px;
+    }
+
+    .release-label {
+      left: 710px;
+      top: 1313px;
+      width: 176px;
+      height: 64px;
+      font-size: 54px;
+    }
+
+    .piezo-material-layer-response {
+      left: 314px;
+      top: 358px;
+      width: 540px;
+      height: 221px;
+    }
+
+    .piezo-initial-state {
+      left: 43px;
+      top: 632px;
+      width: 616px;
+      height: 244px;
+    }
+
+    .piezo-deformation-state {
+      left: 429px;
+      top: 861px;
+      width: 546px;
+      height: 252px;
+    }
+
+    .piezo-release-state {
+      left: 43px;
+      top: 1145px;
+      width: 628px;
+      height: 250px;
+    }
+
+    .left-connectors {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1000px;
+      height: 1424px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Right: MM-GPENG structure */
+    .structure-panel {
+      position: absolute;
+      left: 994px;
+      top: 0;
+      width: 2046px;
+      height: 1472px;
+    }
+
+    .panel-letter-b {
+      left: 16px;
+      top: 31px;
+      width: 112px;
+      height: 82px;
+      font: 72px/1 "Times New Roman", Times, serif;
+    }
+
+    .structure-title {
+      left: 235px;
+      top: 37px;
+      width: 745px;
+      height: 70px;
+      font-size: 67px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .cell-title {
+      left: 1318px;
+      top: 54px;
+      width: 350px;
+      height: 58px;
+      font-size: 52px;
+      color: #246c86;
+      font-weight: 400;
+    }
+
+    .vertical-material-box {
+      position: absolute;
+      left: 2px;
+      top: 145px;
+      width: 120px;
+      height: 455px;
+      border: 2px solid #80acbd;
+      background: rgba(247, 253, 255, .72);
+      z-index: 3;
+    }
+
+    .vertical-material-text {
+      left: 20px;
+      top: 35px;
+      width: 78px;
+      height: 378px;
+      font-family: serif;
+      font-size: 63px;
+      line-height: 1.52;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .mm-gpeng-cell-structure {
+      left: 134px;
+      top: 128px;
+      width: 494px;
+      height: 487px;
+    }
+
+    .cell-plate-dimensions {
+      left: 729px;
+      top: 106px;
+      width: 319px;
+      height: 516px;
+    }
+
+    .front-microcell-distribution {
+      left: 1125px;
+      top: 108px;
+      width: 303px;
+      height: 518px;
+    }
+
+    .back-microcell-distribution {
+      left: 1453px;
+      top: 106px;
+      width: 265px;
+      height: 502px;
+    }
+
+    .plus-symbol {
+      left: 1064px;
+      top: 326px;
+      width: 72px;
+      height: 80px;
+      font: 82px/1 "Times New Roman", Times, serif;
+    }
+
+    .piezo-layer-label {
+      left: 1729px;
+      top: 106px;
+      width: 240px;
+      height: 64px;
+      font-size: 54px;
+    }
+
+    .front-label-cn {
+      left: 1737px;
+      top: 474px;
+      width: 126px;
+      height: 58px;
+      font-size: 51px;
+    }
+
+    .dimension-m {
+      left: 1718px;
+      top: 347px;
+      width: 70px;
+      height: 70px;
+      font: italic 60px/1 "Times New Roman", Times, serif;
+    }
+
+    .dimension-h {
+      left: 1801px;
+      top: 584px;
+      width: 60px;
+      height: 60px;
+      font: italic 58px/1 "Times New Roman", Times, serif;
+    }
+
+    .dimension-d {
+      left: 1983px;
+      top: 893px;
+      width: 55px;
+      height: 61px;
+      font: italic 57px/1 "Times New Roman", Times, serif;
+    }
+
+    .width-label {
+      left: 1690px;
+      top: 1191px;
+      width: 115px;
+      height: 42px;
+      font-size: 36px;
+      font-family: serif;
+      text-align: center;
+    }
+
+    .lower-structure {
+      position: absolute;
+      left: 40px;
+      top: 646px;
+      width: 1975px;
+      height: 780px;
+      border: 4px dashed #00102c;
+      z-index: 1;
+    }
+
+    .lower-divider-one {
+      position: absolute;
+      left: 679px;
+      top: 0;
+      width: 3px;
+      height: 778px;
+      background: #00102c;
+    }
+
+    .lower-divider-two {
+      position: absolute;
+      left: 1390px;
+      top: 0;
+      width: 4px;
+      height: 778px;
+      background: #00102c;
+    }
+
+    .nested-mm-layer-constraint-diagram {
+      left: 69px;
+      top: 2px;
+      width: 258px;
+      height: 243px;
+    }
+
+    .outer-label {
+      left: 11px;
+      top: 231px;
+      width: 170px;
+      height: 63px;
+      font: italic 57px/1 "Times New Roman", Times, serif;
+    }
+
+    .spiral-label {
+      left: 384px;
+      top: 35px;
+      width: 254px;
+      height: 57px;
+      font-size: 52px;
+    }
+
+    .sliding-label {
+      left: 371px;
+      top: 132px;
+      width: 267px;
+      height: 58px;
+      font-size: 50px;
+    }
+
+    .height-label {
+      left: 439px;
+      top: 258px;
+      width: 190px;
+      height: 60px;
+      font-size: 49px;
+    }
+
+    .middle-diagram {
+      position: absolute;
+      left: 120px;
+      top: 237px;
+      width: 365px;
+      height: 295px;
+      z-index: 2;
+    }
+
+    .middle-shell {
+      position: absolute;
+      left: 34px;
+      top: 10px;
+      width: 236px;
+      height: 233px;
+      border: 5px solid #00102c;
+      border-radius: 50%;
+      background: radial-gradient(circle at 54% 40%, #ffffff 0%, #edfaff 54%, #c2e8f5 100%);
+      box-shadow: inset 0 0 0 10px rgba(174, 220, 237, .45);
+    }
+
+    .middle-arc {
+      position: absolute;
+      left: 30px;
+      top: 73px;
+      width: 242px;
+      height: 100px;
+      border-top: 5px solid #00102c;
+      border-radius: 50%;
+    }
+
+    .middle-label {
+      left: 267px;
+      top: 145px;
+      width: 175px;
+      height: 60px;
+      font: italic 56px/1 "Times New Roman", Times, serif;
+    }
+
+    .mm-layer-label {
+      left: 40px;
+      top: 525px;
+      width: 188px;
+      height: 60px;
+      font-size: 55px;
+    }
+
+    .joint-note {
+      position: absolute;
+      left: 0;
+      top: 648px;
+      width: 262px;
+      height: 128px;
+      border: 4px solid #00102c;
+      background: #fff;
+      z-index: 5;
+    }
+
+    .joint-note-text {
+      left: 75px;
+      top: 31px;
+      width: 170px;
+      height: 55px;
+      font-size: 50px;
+    }
+
+    .slice-01 {
+      left: 148px;
+      top: 237px;
+      width: 246px;
+      height: 252px;
+    }
+
+    .slice-02 {
+      left: 290px;
+      top: 451px;
+      width: 310px;
+      height: 315px;
+    }
+
+    .inner-label {
+      left: 494px;
+      top: 710px;
+      width: 145px;
+      height: 55px;
+      font: italic 54px/1 "Times New Roman", Times, serif;
+    }
+
+    .constraint-title-cn {
+      left: 726px;
+      top: 31px;
+      width: 270px;
+      height: 60px;
+      font-size: 51px;
+    }
+
+    .constraint-title-en {
+      left: 676px;
+      top: 120px;
+      width: 380px;
+      height: 61px;
+      font-size: 52px;
+    }
+
+    .inner-ring-label {
+      left: 781px;
+      top: 228px;
+      width: 173px;
+      height: 56px;
+      font-size: 47px;
+    }
+
+    .sliding-unit-label {
+      left: 724px;
+      top: 324px;
+      width: 275px;
+      height: 58px;
+      font-size: 47px;
+    }
+
+    .gravity-cn {
+      left: 711px;
+      top: 428px;
+      width: 250px;
+      height: 59px;
+      font-size: 49px;
+    }
+
+    .gravity-en {
+      left: 676px;
+      top: 621px;
+      width: 355px;
+      height: 142px;
+      font: italic 55px/1.28 "Times New Roman", Times, serif;
+      white-space: normal;
+    }
+
+    .gravity-constraint-cutaway {
+      left: 949px;
+      top: 45px;
+      width: 435px;
+      height: 737px;
+    }
+
+    .assembled-cell-dimension-diagram {
+      left: 1426px;
+      top: 24px;
+      width: 524px;
+      height: 568px;
+    }
+
+    .response-callout {
+      position: absolute;
+      left: 1103px;
+      top: 602px;
+      width: 865px;
+      height: 180px;
+      border: 4px solid #00102c;
+      border-radius: 17px;
+      background: rgba(255, 255, 255, .98);
+      z-index: 7;
+    }
+
+    .response-text {
+      left: 18px;
+      top: 15px;
+      width: 823px;
+      height: 146px;
+      font-size: 46px;
+      line-height: 1.55;
+      white-space: normal;
+    }
+
+    .structure-connectors {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2046px;
+      height: 1472px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .footer-rule {
+      position: absolute;
+      left: 14px;
+      bottom: 0;
+      width: 3012px;
+      height: 5px;
+      background: #00102c;
+    }
+  
+.export-inline-style-1{padding: 0px !important; border: 0px !important; transform: none !important;}
+.export-reference-asset-1{position:absolute!important;left:314px!important;top:358px!important;width:540px!important;height:221px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-2{position:absolute!important;left:43px!important;top:632px!important;width:616px!important;height:244px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-3{position:absolute!important;left:429px!important;top:861px!important;width:546px!important;height:252px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-4{position:absolute!important;left:43px!important;top:1145px!important;width:628px!important;height:250px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-5{position:absolute!important;left:134px!important;top:128px!important;width:494px!important;height:487px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-6{position:absolute!important;left:729px!important;top:106px!important;width:319px!important;height:516px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-7{position:absolute!important;left:1125px!important;top:108px!important;width:303px!important;height:518px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-8{position:absolute!important;left:1453px!important;top:106px!important;width:265px!important;height:502px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-9{position:absolute!important;left:25px!important;top:-2px!important;width:258px!important;height:243px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-10{position:absolute!important;left:945px!important;top:41px!important;width:435px!important;height:737px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-11{position:absolute!important;left:1422px!important;top:20px!important;width:524px!important;height:568px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-12{position:absolute!important;left:144px!important;top:235px!important;width:246px!important;height:252px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+.export-reference-asset-13{position:absolute!important;left:286px!important;top:449px!important;width:310px!important;height:315px!important;border-radius:0px 0px 0px 0px!important;transform:none!important;}
+:root{--board-width:3040;--board-height:1472;}
+html,body{margin:0;min-height:100%;background:#eef0f4;}
+body{overflow-x:hidden;}
+.fit-shell{width:100%;display:grid;place-items:start center;overflow-x:clip;}
+.fit-box{position:relative;overflow:hidden;}
+.screen{width:3040px;height:1472px;transform-origin:top left;}

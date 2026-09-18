@@ -1,0 +1,34 @@
+{
+  "name": "@pic2ppt/image-to-html",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local image decomposition and editable HTML/.fig export tool",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "image-to-html": "bin/image-to-html.cjs"
+  },
+  "scripts": {
+    "start": "node bin/image-to-html.cjs",
+    "build": "npm run build:ui",
+    "build:ui": "node scripts/build-ui-html.js",
+    "test": "npm run build && node --test tests/**/*.test.js && npm run check",
+    "test:browser": "node scripts/verify-browser.cjs",
+    "check": "node --check server.js && node --check bin/image-to-html.cjs && node --check scripts/build-ui-html.js"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "dependencies": {
+    "@neplex/vectorizer": "^0.0.5",
+    "fast-xml-parser": "^5.3.8",
+    "jszip": "^3.10.1",
+    "makerjs": "^0.19.2",
+    "openfig-core": "^0.4.1",
+    "playwright-core": "1.62.1",
+    "sharp": "^0.34.5",
+    "svgpath": "^2.6.0",
+    "undici": "^6.28.1",
+    "zstd-codec": "^0.1.5"
+  }
+}
