@@ -1308,6 +1308,10 @@
         previewEditableDesignHtml(true);
       });
       decomposeBackgroundButton.addEventListener("click", () => {
+        if (!hasConfiguredVisionAccess()) {
+          setStatus("请先在「设置模型」中配置可用的图片理解模型，再进行切图。", "warning");
+          return;
+        }
         runBackgroundDecompositionPlanning(false);
       });
       backgroundDecompositionLoadingCancel.addEventListener("click", cancelBackgroundDecompositionPlanning);
@@ -5539,12 +5543,18 @@
       }
 
       function updateImageToCodeButtonState() {
-        const disabled = importActionsDisabled
+        const busy = importActionsDisabled
           || uiBusy
           || workspaceOperationRunning
           || Boolean(backgroundDecompositionRequest)
           || !getActiveResultImage()?.dataUrl;
-        decomposeBackgroundButton.disabled = disabled;
+        // Slicing is the first step and needs a usable vision model; without one
+        // the request could only fail server-side.
+        const missingVision = !hasConfiguredVisionAccess();
+        decomposeBackgroundButton.disabled = busy || missingVision;
+        decomposeBackgroundButton.title = missingVision
+          ? "请先在「设置模型」中配置可用的图片理解模型"
+          : "";
       }
 
       function setImportActionsDisabled(disabled) {
@@ -8029,6 +8039,7 @@
       function renderModelSettings() {
         taskRoutingView.innerHTML = renderTaskRoutingView(modelConfigState);
         modelConfigList.innerHTML = renderModelConfigListView(modelConfigState);
+        updateImageToCodeButtonState();
       }
 
       function findModelConfig(configId) {

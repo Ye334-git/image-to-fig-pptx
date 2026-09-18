@@ -37,6 +37,10 @@ const {
   createPlaywrightFigmaCaptureService
 } = require("./src/server/services/playwright-figma-capture");
 const {
+  describePptxUnavailable,
+  resolvePptxRuntimeCapabilities
+} = require("./src/server/services/pptx-runtime");
+const {
   requestUiDecompositionText
 } = require("./src/server/services/ui-decomposition-request");
 const {
@@ -212,7 +216,7 @@ const server = http.createServer(async (request, response) => {
     if (request.method === "GET" && request.url === "/api/v1/health") {
       sendJson(response, 200, {
         ok: true,
-        capabilities: { highFidelityCapture: Boolean(SYSTEM_BROWSER_LAUNCH_OPTIONS) }
+        capabilities: buildHealthCapabilities()
       });
       return;
     }
@@ -327,6 +331,33 @@ function mutateModelConfigState(mutator) {
 function getTaskRequestContext(task) {
   const config = resolveTaskConfig(modelConfigState, task);
   return getConfigRequestContext(config);
+}
+
+/**
+ * Non-throwing variant of task routing lookup, for capability reporting.
+ * resolveTaskConfig throws when nothing is routed or the config is unusable.
+ */
+function isTaskConfigured(task) {
+  try {
+    return Boolean(resolveTaskConfig(modelConfigState, task).apiKey);
+  } catch {
+    return false;
+  }
+}
+
+function buildHealthCapabilities() {
+  const browserAvailable = Boolean(SYSTEM_BROWSER_LAUNCH_OPTIONS);
+  const pptx = resolvePptxRuntimeCapabilities({ browserAvailable });
+  return {
+    highFidelityCapture: browserAvailable,
+    browserAvailable,
+    visionConfigured: isTaskConfigured("vision"),
+    generationConfigured: isTaskConfigured("generation"),
+    powerPointAvailable: pptx.powerPointAvailable,
+    pptxToolInstalled: pptx.pptxToolInstalled,
+    pptxConversionAvailable: pptx.pptxConversionAvailable,
+    pptxUnavailableReason: pptx.pptxConversionAvailable ? "" : describePptxUnavailable(pptx)
+  };
 }
 
 function getConfigRequestContext(config) {
