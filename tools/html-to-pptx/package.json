@@ -2,6 +2,7 @@
   "name": "@local/html-to-pptx-pipeline",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "Convert ordered HTML slides into one editable PPTX and render final PowerPoint previews.",
   "bin": {
@@ -9,7 +10,7 @@
   },
   "scripts": {
     "convert": "node ./bin/html-to-pptx.mjs",
-    "test": "node --test"
+    "test": "node --test tests/**/*.test.js"
   },
   "engines": {
     "node": ">=20.19.0"

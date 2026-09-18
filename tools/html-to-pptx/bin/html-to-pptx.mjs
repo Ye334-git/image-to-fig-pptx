@@ -367,7 +367,22 @@ async function main() {
   process.stdout.write(`${JSON.stringify({ outputPptx: config.output, reportPath, renderDir: config.render ? config.renderDir : null, slideCount: config.slides.length }, null, 2)}\n`);
 }
 
-main().catch(error => {
-  process.stderr.write(`${error.stack || error.message}\n`);
-  process.exitCode = 1;
-});
+const isDirectRun = Boolean(process.argv[1])
+  && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isDirectRun) {
+  main().catch(error => {
+    process.stderr.write(`${error.stack || error.message}\n`);
+    process.exitCode = 1;
+  });
+}
+
+export {
+  computeContainPlacement,
+  findBrowserExecutable,
+  main,
+  normalizeAspect,
+  parseArgs,
+  resolveSlideSize,
+  validatePptx
+};

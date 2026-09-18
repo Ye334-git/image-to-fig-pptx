@@ -4,16 +4,18 @@
 拆分思路：先固化基线（T0）→ 产品壳（T1）→ 两个独立小改动（T2 解封 .fig、T3 门禁与检测）→ 核心新增（T4 PPTX 路由）→ UI 接线（T5）→ 多页（T6）→ 端到端收口（T7）。
 最大风险点：**T4**（跨进程调用 + 画布尺寸缺陷 + ZIP 消毒交互）。
 
-| # | Ticket | 状态 |
-| --- | --- | --- |
-| T0 | 基线固化与版本控制 | pending |
-| T1 | 产品壳与启动器 | pending |
-| T2 | 解封切图 .fig 导出 | pending |
-| T3 | Key 门禁与 PowerPoint 检测 | pending |
-| T4 | PPTX 导出路由 | pending |
-| T5 | PPTX UI 控件与比例选择 | pending |
-| T6 | 多页合并 | pending |
-| T7 | 端到端冒烟与文档 | pending |
+| # | Ticket | 状态 | 提交 |
+| --- | --- | --- | --- |
+| T0 | 基线固化与版本控制 | completed | `283cc76` |
+| T1 | 产品壳与启动器 | completed | `1297ae2` |
+| T2 | 解封切图 .fig 导出 | completed | `8810cf3` |
+| T3 | Key 门禁与 PowerPoint 检测 | completed | `67faf61` |
+| T4 | PPTX 导出路由 | completed | `e6365cb` |
+| T5 | PPTX UI 控件与比例选择 | completed | `12372c6` |
+| T6 | 多页合并 | completed | `d3ca0f7` |
+| T7 | 端到端冒烟与文档 | completed | （本提交） |
+
+**实施结果**：8/8 完成。测试总数 `image-to-html` 231 → 266，`html-to-pptx` 0 → 6，`image-to-pptx` 新增 5 + 4。验收明细见 `docs/dev/acceptance.md`。
 
 ---
 

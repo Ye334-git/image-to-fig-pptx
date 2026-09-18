@@ -34,6 +34,25 @@ Figma Desktop 用户可导入 `image-to-slice/manifest.json` 作为开发插件�
 
 `deliverables/260917pic2ppt-html-slides.pptx` 是早期的整页图片版本，仅作为视觉对照保留。
 
+## image-to-pptx 工作流
+
+`tools/image-to-pptx/` 是本项目的主入口：把上面两个工具封装成一条本地 Web GUI 工作流。
+
+双击 `tools/image-to-pptx/start.cmd`（或在 `tools/image-to-pptx` 下运行 `npm start`），浏览器打开 `http://127.0.0.1:18789`。
+
+流程：**配 key → 送入图片 → 一键切图 → 人工调整切图 → 生成 HTML 预览（或直接下载切图 `.fig`）→ 转 PPTX → 验收**。
+
+要点：
+
+- 平台、切片编辑、HTML 重建与 `.fig` 导出由 `tools/image-to-html/` 提供，GUI 与 `/api/v1` 同源。
+- HTML→PPTX 由 `tools/html-to-pptx/` 提供，由引擎按路径以子进程调用，**不需要任何 API Key**（本机浏览器 + 本地 DOM→PPTX + Microsoft PowerPoint）。
+- 只有切图与 HTML 重建需要模型 key，用使用者自己配置的 key，成本自控。
+- 未配置任何可用 key 时无法进行第一步切图；缺少 PowerPoint 或浏览器时只禁用「转 PPTX」。
+- 多页：每页在自己的工作区完成后「加入队列」，再一次性合并为一个 PPTX。
+- 数据目录沿用 `tools/image-to-html/.image-to-html-data/`，与既有配置和切图记录共用。
+
+详见 `tools/image-to-pptx/README.md`，设计与验收见 `docs/dev/`。
+
 ## 依赖与构建
 
 需要 Node.js >=20.19.0，本次使用 v22.18.0。在 `image-to-slice` 目录运行：

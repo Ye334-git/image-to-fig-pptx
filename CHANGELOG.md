@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-18（image-to-pptx 工作流）
+
+- 新增 `tools/image-to-pptx/`：把切图编辑器与 HTML→PPTX 管线封装成单一本地 Web GUI 工作流，含快捷方式、启动器与端到端测试。
+- 恢复上游 image-to-slice 原版的切图 `.fig` 下载能力（此前被两道 guard 与一个 `hidden` 关闭，渲染栈与上游逐字节一致）。
+- 新增 Key 门禁与运行环境检测：`/api/v1/health` 报告识图/生图是否配置、是否有浏览器与 PowerPoint、能否转换 PPTX；无 key 禁止切图，无 PowerPoint 仅禁用转 PPTX。
+- 新增 `POST /api/v1/exports/pptx`：复用 HTML 导出的消毒打包结果，落盘后以子进程调用 `html-to-pptx`，返回可编辑 PPTX；并提供 `GET /api/v1/pptx-jobs/:id` 与逐页 PNG 预览端点。
+- 修复画布尺寸缺陷：导出脚本会按视口宽度缩放 `.screen`，转换时现显式固定 viewport，宽画布不再被算错。
+- 新增多页合并：每页在其工作区完成后加入队列，一次性合并为一个 deck，并报告 `requestedSlides`/`droppedSlides`，掉页不会被静默吞掉。
+- 新增 PPTX 导出 UI：比例选择（默认 16:9，可选原比例/4:3/3:4）、单页导出、合并队列与逐页预览。
+- 测试：`image-to-html` 231 → 266 项；`html-to-pptx` 0 → 6 项并补 MIT LICENSE；`tools/image-to-pptx` 新增 5 项启动器单测与 4 项真实 E2E 断言。
+
 ## 2026-09-18
 
 - 新增独立 `tools/image-to-html/` 本地 Web 编辑器：同源 `/api/v1`、独立模型与工作区数据、AI/手工拆图、扣背景/补图、SVG 建议与重建、HTML ZIP 和 Editable `.fig` 导出。
